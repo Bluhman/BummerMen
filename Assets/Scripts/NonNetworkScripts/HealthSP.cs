@@ -11,6 +11,7 @@ public class HealthSP : MonoBehaviour
     public bool startInvuln = true;
     public bool isAPlayer = true;
     public int currentHealth = 1;
+    public PlayerHUDControllerSP hudForPlayer;
 
     public float currentInvulnTime;
 
@@ -71,6 +72,8 @@ public class HealthSP : MonoBehaviour
                 {
                     playerScript.resetStats();
                     playerScript.currentLives--;
+                    if (hudForPlayer != null)
+                        hudForPlayer.UpdateLives();
                     print("reduced to " + playerScript.currentLives + " lives.");
                     if (playerScript.currentLives > 0)
                         Respawn();

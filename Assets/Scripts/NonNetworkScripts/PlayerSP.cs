@@ -56,6 +56,7 @@ public class PlayerSP : MonoBehaviour {
 
         if (lives <= 0) return;
 
+        if (Time.timeScale > 0)
         moveWithInput();
 
         if (Input.GetKeyDown(layBombKey))

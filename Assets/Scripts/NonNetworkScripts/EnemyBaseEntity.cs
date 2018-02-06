@@ -39,11 +39,7 @@ public class EnemyBaseEntity : MonoBehaviour {
         if (nextLocation != null)
         {
             //Rotate the player to where the intended movement is facing.
-            /*
-            Vector3 facing = nextLocation.normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(facing);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * turnSpeed);
-            */
+            transform.LookAt(nextLocation);
 
             //MOVE IT.
             movePercentage += (1 / moveTime) * Time.deltaTime;
@@ -68,19 +64,19 @@ public class EnemyBaseEntity : MonoBehaviour {
             Vector3 positionFacing = new Vector3(Mathf.Cos(Mathf.Deg2Rad * a), 0, Mathf.Sin(Mathf.Deg2Rad * a));
             if (Physics.Raycast(transform.position, positionFacing, out hit, gridSize))
             {
-                //if (hit.collider.CompareTag("Player"))
+                if (!hit.collider.CompareTag("Player"))
                 {
                     //print(hit.transform.name + " at " + positionFacing);
                     continue;
                 }
             }
-            //print(positionFacing);
+            //print(a + " is an option");
             locations.Add(transform.position + positionFacing);
         }
-        print(locations.Count + " possible spots");
+        //print(locations.Count + " possible spots");
         if (locations.Count > 0)
         {
-            nextLocation = locations[Random.Range(0, locations.Count - 1)];
+            nextLocation = locations[Random.Range(0, locations.Count)];
         }
     }
 
@@ -90,5 +86,16 @@ public class EnemyBaseEntity : MonoBehaviour {
         xGridPos = Mathf.RoundToInt(transform.position.x);
         yGridPos = Mathf.RoundToInt(transform.position.z);
         //print(xGridPos + ", " + yGridPos);
+    }
+
+    //Damages the player when they collide.
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            HealthSP thingHit = other.GetComponent<HealthSP>();
+            if (thingHit != null)
+                thingHit.TakeDamage(1);
+        }
     }
 }
