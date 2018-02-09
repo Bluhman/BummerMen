@@ -13,7 +13,8 @@ public class EnemyBaseEntity : MonoBehaviour {
     int yGridPos;
     public float gridSize;
     Vector3 currentLocation;
-    Vector3 nextLocation;
+    [HideInInspector]
+    public Vector3 nextLocation;
     float movePercentage;
 
     void Awake()
@@ -55,7 +56,7 @@ public class EnemyBaseEntity : MonoBehaviour {
 
     //Navigation logic for the enemy is put here. Optimally you'd sub out the contents of this function to make for some strategy.
     //For now this just picks one of four random cardinal directions to move in.
-    void FindNextLocation()
+    public virtual void FindNextLocation()
     {
         List<Vector3> locations = new List<Vector3>();
         for (int a = 0; a < 360; a += 90)

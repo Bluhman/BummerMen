@@ -12,9 +12,11 @@ public class BrickSpawnerSP : MonoBehaviour
     public GameObject[] spawnPositions;
     public float spawnPositionFreespace;
     public LayerMask levelMask;
+    public float enemyRoom;
 
     public void Start()
     {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         int halfMapSize = mapSize / 2;
         for (int x = -halfMapSize; x <= halfMapSize; x++)
         {
@@ -38,6 +40,16 @@ public class BrickSpawnerSP : MonoBehaviour
                     continue;
                 }
                 
+                //Go through all the enemies to ensure that they have enough room.
+                for (int i = 0; i < enemies.Length; i++)
+                {
+                    if (Vector3.Distance(enemies[i].transform.position, blockPosition) < enemyRoom)
+                    {
+                        placeable = false;
+                        break;
+                    }
+                }
+
                 //Finally check if the spawning location is far enough from where players appear.
                 for (int i = 0; i < spawnPositions.Length; i++)
                 {
