@@ -14,6 +14,8 @@ public class Health : NetworkBehaviour {
     [SyncVar]
     
     public float currentInvulnTime;
+    public AudioClip dieSound;
+    AudioSource AUDIO;
 
     bool looksInvuln;
     bool alreadyDead;
@@ -47,6 +49,8 @@ public class Health : NetworkBehaviour {
 
         alreadyDead = false;
 
+        AUDIO = GetComponent<AudioSource>();
+
     }
 
     public void TakeDamage(int amount)
@@ -62,6 +66,12 @@ public class Health : NetworkBehaviour {
 
         if (currentHealth <= 0 && !alreadyDead)
         {
+            //Play death sound if it has one.
+            if (AUDIO != null || dieSound != null)
+            {
+                AUDIO.clip = dieSound;
+                AUDIO.Play();
+            }
             alreadyDead = true;
             //This bool is set to make sure that the death scripting isn't run more than once.
             //This is important for objects that spawn things when destroyed, such as powerups.

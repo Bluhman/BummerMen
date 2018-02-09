@@ -8,6 +8,7 @@ public class BombSP : MonoBehaviour
     public GameObject explosion;
     public LayerMask levelMask;
     private bool exploded = false;
+    public GameObject noiseSource;
 
     [HideInInspector]
     public PlayerSP owner;
@@ -24,6 +25,8 @@ public class BombSP : MonoBehaviour
 
     void Explode()
     {
+        GameObject.Instantiate(noiseSource);
+
         exploded = true;
 
         GameObject expl = Instantiate(explosion, transform.position, Quaternion.identity);

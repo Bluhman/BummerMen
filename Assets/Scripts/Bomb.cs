@@ -9,6 +9,8 @@ public class Bomb : NetworkBehaviour
     public GameObject explosion;
     public LayerMask levelMask;
     private bool exploded = false;
+    public AudioClip laySound;
+    public AudioClip explodeSound;
 
     [HideInInspector]
     public Player owner;
@@ -17,11 +19,15 @@ public class Bomb : NetworkBehaviour
 
     public float explosionTime = 4;
     private float destroyDelay = 2;
+    AudioSource AUDIO;
 
     void Start()
     {
+        AUDIO = gameObject.GetComponent<AudioSource>();
         if (!base.isServer)
              return;
+
+
 
         Invoke("Explode", explosionTime);
     }

@@ -17,6 +17,9 @@ public class PlayerSP : MonoBehaviour {
     public float gridSize;
     public KeyCode layBombKey;
 
+    AudioSource AUDIO;
+    public AudioClip pickUp;
+
     public int baseBombs = 3;
     int bombs;
     public int currentBombs;
@@ -47,6 +50,7 @@ public class PlayerSP : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        AUDIO = GetComponent<AudioSource>();
         setGridPositionFromRealPos();
     }
 
@@ -168,6 +172,9 @@ public class PlayerSP : MonoBehaviour {
     //Method called when the player picks up a PowerUp. This matches up the number of the powerup to an effect.
      public void applyPowerup(int type)
     {
+        AUDIO.clip = pickUp;
+        AUDIO.Play();
+
         switch (type)
         {
             case 0:
