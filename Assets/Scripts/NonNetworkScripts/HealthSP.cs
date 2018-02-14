@@ -42,6 +42,7 @@ public class HealthSP : MonoBehaviour
 
         GetComponent<Renderer>().material.color = invulnColor;
 
+        AUDIO = GetComponent<AudioSource>();
 
         spawnPoints = FindObjectsOfType<NetworkStartPosition>();
 
