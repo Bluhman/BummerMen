@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerHUDControllerSP : MonoBehaviour {
 
     public PlayerSP playerSP;
-    public Text GameOverText;
+    public GameObject GameOverText;
     public Text LifeCounterText;
     public Text TimerText;
     public GameObject pauseMenu;
@@ -17,7 +17,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        GameOverText.enabled = false;
+        GameOverText.SetActive(false);
         pauseMenu.SetActive(false);
         UpdateLives();
         timer = timeLimit;
@@ -53,14 +53,14 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
         if (playerSP.currentLives <= 0)
         {
-            GameOverText.enabled = true;
+            GameOverText.SetActive(true);
         }
     }
 
     public void TogglePause()
     {
         //Don't let us call up the pause menu if we game-overed.
-        if (GameOverText.enabled) return;
+        if (GameOverText.activeSelf) return;
 
         if (!paused)
         {
