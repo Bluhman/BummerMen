@@ -17,10 +17,24 @@ public class BombSP : MonoBehaviour
 
     public float explosionTime = 4;
     private float destroyDelay = 2;
+    public float hitExplosionDelay = 0.01f;
+
+    public float bombPulseMagnitude;
+    public float bombPulseSpeed;
+    public float bombLocalScale = 4;
+    float bombPulsePeriod;
 
     void Start()
     {
+        bombPulsePeriod = 0f;
         Invoke("Explode", explosionTime);
+    }
+
+    private void Update()
+    {
+        bombPulsePeriod += Time.deltaTime;
+        float currentSize = bombLocalScale + bombPulseMagnitude * Mathf.Sin(bombPulseSpeed * bombPulsePeriod);
+        model.transform.localScale = new Vector3(currentSize, currentSize, currentSize);
     }
 
     void Explode()
@@ -140,7 +154,8 @@ public class BombSP : MonoBehaviour
         if (!exploded && other.CompareTag("Explosion"))
         {
             CancelInvoke("Explode");
-            Explode();
+            //Explode();
+            Invoke("Explode", hitExplosionDelay);
         }
     }
 

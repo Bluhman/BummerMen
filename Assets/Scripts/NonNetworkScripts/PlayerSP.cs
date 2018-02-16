@@ -80,7 +80,7 @@ public class PlayerSP : MonoBehaviour {
         Collider[] thingsInPlace = Physics.OverlapSphere(new Vector3(xGridPos, 0.5f, yGridPos), 0.3f);
         foreach (Collider thing in thingsInPlace)
         {
-            if (thing.gameObject.GetComponent<Bomb>() != null) return;
+            if (thing.gameObject.GetComponent<BombSP>() != null) return;
         }
 
         GameObject bomb = Instantiate(bombPrefab, new Vector3(xGridPos, 0.5f, yGridPos), Quaternion.identity);

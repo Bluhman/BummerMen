@@ -11,6 +11,22 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1807371267614290}
   m_IsPrefabParent: 1
+--- !u!1 &1690228878991448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4388334345432682}
+  - component: {fileID: 81150664573375514}
+  m_Layer: 0
+  m_Name: ListenerProbe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1807371267614290
 GameObject:
   m_ObjectHideFlags: 0
@@ -22,7 +38,6 @@ GameObject:
   - component: {fileID: 20680058495579036}
   - component: {fileID: 92111210093183056}
   - component: {fileID: 124693521000321382}
-  - component: {fileID: 81122096419921172}
   - component: {fileID: 114231483801690136}
   m_Layer: 0
   m_Name: Single Player Camera
@@ -31,6 +46,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4388334345432682
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1690228878991448}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4641048801012792}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4641048801012792
 Transform:
   m_ObjectHideFlags: 1
@@ -40,7 +68,8 @@ Transform:
   m_LocalRotation: {x: 0.5735764, y: 0, z: 0, w: 0.8191521}
   m_LocalPosition: {x: 0, y: 118, z: -44}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4388334345432682}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 70, y: 0, z: 0}
@@ -75,17 +104,17 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
---- !u!81 &81122096419921172
+--- !u!81 &81150664573375514
 AudioListener:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1807371267614290}
+  m_GameObject: {fileID: 1690228878991448}
   m_Enabled: 1
 --- !u!92 &92111210093183056
 Behaviour:
@@ -107,12 +136,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerToTrack: {fileID: 0}
   xAngle: 70
-  cameraDistance: 70
+  cameraDistance: 45
   playerWiggleDistance: 1
-  XMin: -9
-  XMax: 9
-  ZMin: -37
-  ZMax: -12
+  XMin: -8
+  XMax: 8
+  ZMin: -32
+  ZMax: 0
   cameraTightness: 0.7
 --- !u!124 &124693521000321382
 Behaviour:

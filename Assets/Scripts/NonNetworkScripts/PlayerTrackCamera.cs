@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class PlayerTrackCamera : MonoBehaviour {
     public GameObject playerToTrack;
+    private GameObject listenerProbe;
     private Vector3 playerPosition;
     private Vector3 lastKnownLegalPosition;
     
@@ -29,6 +30,10 @@ public class PlayerTrackCamera : MonoBehaviour {
         //get the camera's rotation right.
         transform.rotation = Quaternion.Euler(xAngle, 0, 0);
         lastKnownLegalPosition = playerToTrack.transform.position;
+
+        //get reference to the listener probe, and move it forward to match the elevation of the map.
+        listenerProbe = transform.GetChild(0).gameObject;
+        listenerProbe.transform.position += transform.forward * cameraDistance;
 
     }
 	
