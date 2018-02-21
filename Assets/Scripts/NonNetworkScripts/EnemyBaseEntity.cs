@@ -16,6 +16,7 @@ public class EnemyBaseEntity : MonoBehaviour {
     [HideInInspector]
     public Vector3 nextLocation;
     float movePercentage;
+    bool dead = false;
 
     void Awake()
     {
@@ -23,6 +24,7 @@ public class EnemyBaseEntity : MonoBehaviour {
         nextLocation = currentLocation;
         movePercentage = 0;
         setGridPositionFromRealPos();
+        dead = false;
     }
 
     // Use this for initialization
@@ -32,7 +34,16 @@ public class EnemyBaseEntity : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (nextLocation == null || nextLocation == currentLocation)
+
+        if (dead)
+        {
+            //DEATH ANIMATION WHOO
+            transform.Rotate(transform.up, 1080 * Time.deltaTime);
+            transform.position += transform.up * 30 * Time.deltaTime;
+            return;
+        }
+
+        if (nextLocation == null || nextLocation == currentLocation)
         {
             FindNextLocation();
         }
@@ -92,11 +103,17 @@ public class EnemyBaseEntity : MonoBehaviour {
     //Damages the player when they collide.
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !dead)
         {
             HealthSP thingHit = other.GetComponent<HealthSP>();
             if (thingHit != null)
                 thingHit.TakeDamage(1);
         }
+    }
+
+    public void DeathAnimation()
+    {
+        dead = true;
+        Destroy(gameObject, 1.0f);
     }
 }

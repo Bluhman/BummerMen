@@ -3,61 +3,81 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// This enemy AI will move in straight lines down hallways similar to EnemyStraight.
-/// On each reselection of a direction to move, it will have a chance of trying to move towards the player.
+/// This enemy moves mostly randomly, but has a chance to head in a direction towards the player.
 /// </summary>
 public class EnemySeekAI : EnemyBaseEntity
 {
-    Vector3 lastMoveAngle;
     GameObject player;
+    public float followChance;
+    public float aggroRange;
+    //These two settings override MoveTime for when the enemy is moving normally, and when stalking the player.
+    public float baseMoveTime;
+    public float aggroMoveTime;
+    public bool requireLineOfSight;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         //get reference to player
         player = GameObject.FindGameObjectWithTag("Player");
 
-	}
-
-    // Update is called once per frame
+    }
+    
     public override void FindNextLocation()
     {
+        moveTime = baseMoveTime;
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, lastMoveAngle, out hit, gridSize))
+
+        //move a direction towards the player.
+        Vector3 positionRelativeToPlayer = player.transform.position - transform.position;
+        bool follow = (positionRelativeToPlayer.magnitude <= aggroRange);
+
+        if (follow && requireLineOfSight)
         {
-            if (!hit.collider.CompareTag("Player"))
+            if (Physics.Raycast(transform.position, positionRelativeToPlayer, out hit))
             {
-                //move a direction towards the player.
-                Vector3 positionRelativeToPlayer = transform.position - player.transform.position;
-
-
-                //pick a random direction to move.
-                List<Vector3> locations = new List<Vector3>();
-                for (int a = 0; a < 360; a += 90)
-                {
-                    Vector3 positionFacing = new Vector3(Mathf.Cos(Mathf.Deg2Rad * a), 0, Mathf.Sin(Mathf.Deg2Rad * a));
-                    if (Physics.Raycast(transform.position, positionFacing, out hit, gridSize))
-                    {
-                        if (!hit.collider.CompareTag("Player"))
-                        {
-                            //print(hit.transform.name + " at " + positionFacing);
-                            continue;
-                        }
-                    }
-                    //print(a + " is an option");
-                    locations.Add(positionFacing);
-                }
-                //print(locations.Count + " possible spots");
-                if (locations.Count > 0)
-                {
-                    int randomIndex = Random.Range(0, locations.Count);
-                    nextLocation = transform.position + locations[randomIndex];
-                    lastMoveAngle = locations[randomIndex];
-                }
+                if (!hit.collider.CompareTag("Player")) follow = false;
             }
         }
-        else
+
+        if (follow) moveTime = aggroMoveTime;
+
+        //pick a random direction to move.
+        List<Vector3> locations = new List<Vector3>();
+        for (int a = 0; a < 360; a += 45)
         {
-            nextLocation = transform.position + lastMoveAngle;
+            
+            Vector3 positionFacing = new Vector3(Mathf.Cos(Mathf.Deg2Rad * a), 0, Mathf.Sin(Mathf.Deg2Rad * a));
+            if (Physics.Raycast(transform.position, positionFacing, out hit, gridSize))
+            {
+                if (!hit.collider.CompareTag("Player"))
+                {
+                    //print(hit.transform.name + " at " + positionFacing);
+                    continue;
+                }
+
+                
+            }
+
+            if (a%90 != 0)
+            {
+                positionFacing *= Mathf.Sqrt(2);
+            }
+
+            locations.Add(positionFacing);
+
+            //If the angle is legal and close to an angle that would send us towards the player, we go that direction.
+            if (Vector3.Angle(positionFacing, positionRelativeToPlayer) <= 22.5f && follow && Random.Range(0,1) <= followChance)
+            {
+                nextLocation = transform.position + positionFacing;
+                return;
+            }
+        }
+        //print(locations.Count + " possible spots");
+        if (locations.Count > 0)
+        {
+            int randomIndex = Random.Range(0, locations.Count);
+            nextLocation = transform.position + locations[randomIndex];
         }
 
 

@@ -10,18 +10,46 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     public Text LifeCounterText;
     public Text TimerText;
     public GameObject pauseMenu;
+    public Image dialogBox;
+    public Image dialogPortrait;
+    public Text dialogText;
     public float timeLimit;
     float timer;
     [HideInInspector]
     public bool paused = false;
 
+
+    public float typeInTime; //time it takes for each letter to be typed into the box.
+    float typeInTimer;
+    [HideInInspector]
+    public float messageDisplayTime;
+    [HideInInspector]
+    string displayMessage;
+    [HideInInspector]
+    public float timeAfterMessage;
+    bool showingMessage;
+    public Vector2 messageBoxOffscreenPos;
+    public Vector2 messageBoxOnscreenPos;
+    public Sprite testSprite;
+
+    Queue<Message> messageQueue;
+    Message currentMessage;
+
+
 	// Use this for initialization
 	void Start () {
+        messageQueue = new Queue<Message>();
         GameOverText.SetActive(false);
         pauseMenu.SetActive(false);
         UpdateLives();
         timer = timeLimit;
-	}
+        currentMessage = new Message("", null, 0);
+
+        //Testing message display functions.
+        //ShowMessage(new Message("This is a test message", null, 3));
+        //ShowMessage(new Message("Isn't that neat?", null, 3));
+        //ShowMessage(new Message("I can also change my face!", testSprite, 5));
+    }
 
     void Update()
     {
@@ -30,6 +58,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
             print("PAUSE?");
             TogglePause();
         }
+
+        HandleMessages();
 
         if (timer > 0 && !paused)
         {
@@ -75,5 +105,93 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         }
 
         paused = !paused;
+    }
+
+    public void ShowMessage(Message nextMessage)
+    {
+        messageQueue.Enqueue(nextMessage);
+    }
+
+    void HandleMessages()
+    {
+        if (!showingMessage)
+        {
+            //clear dialogue
+            dialogText.text = "";
+            
+            //Move text box offscreen.
+            dialogBox.rectTransform.anchoredPosition = Vector2.Lerp(dialogBox.rectTransform.anchoredPosition, messageBoxOffscreenPos, 0.6f);
+
+            if (messageQueue.Count > 0)
+            {
+                dialogText.text = "";
+                showingMessage = true;
+                currentMessage = messageQueue.Dequeue();
+                timeAfterMessage = currentMessage.duration;
+                displayMessage = currentMessage.text;
+                typeInTimer = typeInTime;
+                if (currentMessage.portrait != null)
+                {
+                    dialogPortrait.sprite = currentMessage.portrait;
+                }
+            }
+        }
+        else
+        {
+            //Move the text box onscreen.
+            dialogBox.rectTransform.anchoredPosition = Vector2.Lerp(dialogBox.rectTransform.anchoredPosition, messageBoxOnscreenPos, 0.6f);
+
+            //Type in dialog letters one by one.
+            if (displayMessage.Length > 0)
+            {
+                typeInTimer -= Time.deltaTime;
+                if (typeInTimer <= 0)
+                {
+                    dialogText.text += displayMessage[0];
+                    displayMessage = displayMessage.Remove(0,1);
+                    //print(displayMessage);
+                    typeInTimer = typeInTime;
+                }
+            }
+
+            if (displayMessage.Length <= 0)
+            {
+                timeAfterMessage -= Time.deltaTime;
+                if (timeAfterMessage <= 0)
+                {
+                    if (messageQueue.Count > 0)
+                    {
+                        dialogText.text = "";
+                        currentMessage = messageQueue.Dequeue();
+                        timeAfterMessage = currentMessage.duration;
+                        displayMessage = currentMessage.text;
+                        typeInTimer = typeInTime;
+                        if (currentMessage.portrait != null)
+                        {
+                            dialogPortrait.sprite = currentMessage.portrait;
+                        }
+                    }
+                    else
+                    {
+                        showingMessage = false;
+                    }
+                }
+            }
+            
+        }
+    }
+
+    public struct Message
+    {
+        public string text;
+        public Sprite portrait;
+        public float duration;
+
+        public Message (string message, Sprite face, float duration)
+        {
+            text = message;
+            portrait = face;
+            this.duration = duration;
+        }
     }
 }

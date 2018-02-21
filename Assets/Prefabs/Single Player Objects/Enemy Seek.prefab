@@ -22,12 +22,12 @@ GameObject:
   - component: {fileID: 33637382983503540}
   - component: {fileID: 23672289088798396}
   - component: {fileID: 135030428371311100}
-  - component: {fileID: 114759604512626080}
+  - component: {fileID: 114618449042024848}
   - component: {fileID: 114484595799719940}
   - component: {fileID: 54660921977889178}
   - component: {fileID: 82656563525808036}
   m_Layer: 0
-  m_Name: Enemy Straight
+  m_Name: Enemy Seek
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,7 +57,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1100013202811414}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16, y: 0.5, z: -18}
+  m_LocalPosition: {x: -18, y: 0.5, z: 8}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4386999352020246}
@@ -86,7 +86,6 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -102,7 +101,6 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -120,12 +118,11 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 4d1cdf03e9c34ce4391611ad81399911, type: 2}
+  - {fileID: 2100000, guid: 31248af58822e7342bde899eec3c9567, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -136,7 +133,6 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -241,7 +237,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   reverbZoneMixCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -271,12 +267,12 @@ MonoBehaviour:
   currentHealth: 1
   hudForPlayer: {fileID: 0}
   currentInvulnTime: 0
-  dieSound: {fileID: 0}
+  dieSound: {fileID: 8300000, guid: e2a90e587a04e2f4ea6693c56dab7230, type: 3}
   dropOnDeath:
     lootDropItems: []
     probabilityTotalWeight: 0
   baseDropChance: 0
---- !u!114 &114759604512626080
+--- !u!114 &114618449042024848
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -284,13 +280,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1100013202811414}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6164b57196d8f4442a7b1e99fc2c9aba, type: 3}
+  m_Script: {fileID: 11500000, guid: dd3f87f503d6a2740ad204c5f32ff3cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.4
+  moveTime: 0.3
   turnSpeed: 3
   gridSize: 1
   nextLocation: {x: 0, y: 0, z: 0}
+  followChance: 1
+  aggroRange: 5
+  baseMoveTime: 0.5
+  aggroMoveTime: 0.3
+  requireLineOfSight: 0
 --- !u!135 &135030428371311100
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -120,7 +120,15 @@ public class HealthSP : MonoBehaviour
                 GameObject newPowerUp = Instantiate(powerUp.item, transform.position, Quaternion.identity);
             }
         }
-        Destroy(gameObject);
+        EnemyBaseEntity enemyScript = GetComponent<EnemyBaseEntity>();
+        if (enemyScript != null)
+        {
+            enemyScript.DeathAnimation();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void OnValidate()
