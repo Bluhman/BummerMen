@@ -6,10 +6,20 @@ using UnityEngine.Networking;
 public class ExplosionSP : MonoBehaviour
 {
 
-    private void Start()
-    {
+    ParticleSystem PS;
 
-        Destroy(gameObject, 0.5f);
+    private void Awake()
+    {
+        PS = GetComponent<ParticleSystem>();
+    }
+
+    private void OnEnable()
+    {
+        PS.Clear();
+        PS.Play();
+
+        //Destroy(gameObject, 0.5f);
+        Invoke("ReturnToPool", 0.5f);
     }
 
     void OnTriggerEnter(Collider other)
@@ -18,5 +28,10 @@ public class ExplosionSP : MonoBehaviour
         HealthSP thingHit = other.GetComponent<HealthSP>();
         if (thingHit != null)
             thingHit.TakeDamage(1);
+    }
+
+    void ReturnToPool()
+    {
+        gameObject.SetActive(false);
     }
 }

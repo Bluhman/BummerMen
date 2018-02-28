@@ -46,9 +46,9 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         currentMessage = new Message("", null, 0);
 
         //Testing message display functions.
-        //ShowMessage(new Message("This is a test message", null, 3));
-        //ShowMessage(new Message("Isn't that neat?", null, 3));
-        //ShowMessage(new Message("I can also change my face!", testSprite, 5));
+        ShowMessage(new Message("This is a test message", null, 3));
+        ShowMessage(new Message("Isn't that neat?", null, 3));
+        ShowMessage(new Message("I can also change my face!", testSprite, 5));
     }
 
     void Update()

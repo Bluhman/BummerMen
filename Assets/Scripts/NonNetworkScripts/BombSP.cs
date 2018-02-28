@@ -43,7 +43,14 @@ public class BombSP : MonoBehaviour
 
         exploded = true;
 
-        GameObject expl = Instantiate(explosion, transform.position, Quaternion.identity);
+        //GameObject expl = Instantiate(explosion, transform.position, Quaternion.identity);
+        GameObject expl = ExplosionPooler.SharedInstance.GetPooledObject("Explosion");
+        if (expl != null)
+        {
+            expl.transform.position = transform.position;
+            expl.transform.rotation = Quaternion.identity;
+            expl.SetActive(true);
+        }
 
         //Cross-shaped explosion
         /*
@@ -130,15 +137,29 @@ public class BombSP : MonoBehaviour
 
             if (!hit.collider)
             {
-                GameObject expl =Instantiate(explosion, transform.position + (i * direction),
-                  explosion.transform.rotation);
+                //GameObject expl =Instantiate(explosion, transform.position + (i * direction),
+                //  explosion.transform.rotation);
+                GameObject expl = ExplosionPooler.SharedInstance.GetPooledObject("Explosion");
+                if (expl != null)
+                {
+                    expl.transform.position = transform.position + (i*direction);
+                    expl.transform.rotation = explosion.transform.rotation;
+                    expl.SetActive(true);
+                }
             }
             else
             {
                 if (hit.collider.GetComponent<Health>() != null)
                 {
-                    GameObject expl = Instantiate(explosion, transform.position + (i * direction),
-                  explosion.transform.rotation);
+                    //  GameObject expl = Instantiate(explosion, transform.position + (i * direction),
+                    //explosion.transform.rotation);
+                    GameObject expl = ExplosionPooler.SharedInstance.GetPooledObject("Explosion");
+                    if (expl != null)
+                    {
+                        expl.transform.position = transform.position + (i * direction);
+                        expl.transform.rotation = explosion.transform.rotation;
+                        expl.SetActive(true);
+                    }
                 }
                 break;
             }
