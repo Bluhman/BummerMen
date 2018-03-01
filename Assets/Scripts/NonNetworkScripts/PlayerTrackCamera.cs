@@ -42,7 +42,7 @@ public class PlayerTrackCamera : MonoBehaviour {
 
         //get reference to the listener probe, and move it forward to match the elevation of the map.
         listenerProbe = transform.GetChild(0).gameObject;
-        listenerProbe.transform.position += transform.forward * cameraDistance;
+        listenerProbe.transform.position = transform.forward * cameraDistance;
 
         maxDistanceBetweenPlayers = 0;
 
@@ -93,6 +93,7 @@ public class PlayerTrackCamera : MonoBehaviour {
         //Simple part is to match the camera's position to that of the player.
         newPosition = lastKnownLegalPosition;
         newPosition -= transform.forward * (cameraDistance + maxDistanceBetweenPlayers * distanceModifier);
+        listenerProbe.transform.position = transform.forward * (cameraDistance + maxDistanceBetweenPlayers * distanceModifier);
 
         //Bind the camera's position to that of the play area according to the mins and maxes:
         newPosition = new Vector3(Mathf.Clamp(newPosition.x, XMin, XMax), newPosition.y, Mathf.Clamp(newPosition.z, ZMin, ZMax));

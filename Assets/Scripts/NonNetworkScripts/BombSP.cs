@@ -124,7 +124,6 @@ public class BombSP : MonoBehaviour
 
         model.SetActive(false);
         Destroy(gameObject, .3f);
-        owner.currentBombs--;
     }
 
     private void CreateExplosions(Vector3 direction)
@@ -178,6 +177,12 @@ public class BombSP : MonoBehaviour
             //Explode();
             Invoke("Explode", hitExplosionDelay);
         }
+    }
+
+    void OnDestroy()
+    {
+        //print("Script was destroyed");
+        owner.currentBombs--;
     }
 
 }

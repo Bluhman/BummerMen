@@ -16,7 +16,8 @@ public class EnemyBaseEntity : MonoBehaviour {
     [HideInInspector]
     public Vector3 nextLocation;
     float movePercentage;
-    bool dead = false;
+    [HideInInspector]
+    public bool dead = false;
 
     void Awake()
     {
