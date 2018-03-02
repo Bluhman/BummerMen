@@ -29,7 +29,7 @@ public class ExplosionPooler : MonoBehaviour {
         {
             for (int i = 0; i < item.amountToPool; i++)
             {
-                GameObject obj = (GameObject)Instantiate(item.objectToPool);
+                GameObject obj = (GameObject)Instantiate(item.objectToPool, transform);
                 obj.SetActive(false);
                 pooledObjects.Add(obj);
             }
@@ -51,7 +51,7 @@ public class ExplosionPooler : MonoBehaviour {
             {
                 if (item.shouldExpand)
                 {
-                    GameObject obj = (GameObject)Instantiate(item.objectToPool);
+                    GameObject obj = (GameObject)Instantiate(item.objectToPool, transform);
                     obj.SetActive(false);
                     pooledObjects.Add(obj);
                     return obj;
