@@ -109,14 +109,12 @@ public class HealthSP : MonoBehaviour
     void ItemSpawnDestroy()
     {
         //print("rpcitemspawn "+dropOnDeath.Length);
-        //if (dropOnDeath.)
+        if (dropOnDeath.lootDropItems.Count > 0)
         {
-            //print("dropondeathlength is over 0: "+baseDropChance);
-            //Determine if we want to spawn a powerup to begin with:
-            if (Random.Range(0.0f, 1.0f) < baseDropChance)
+            //GameObject powerUp = Instantiate(dropOnDeath[Random.Range(0, dropOnDeath.Length)], transform.position, Quaternion.identity);
+            GenericLootDropItemGameObject powerUp = dropOnDeath.PickLootDropItem();
+            if (powerUp.item != null)
             {
-                //GameObject powerUp = Instantiate(dropOnDeath[Random.Range(0, dropOnDeath.Length)], transform.position, Quaternion.identity);
-                GenericLootDropItemGameObject powerUp = dropOnDeath.PickLootDropItem();
                 GameObject newPowerUp = Instantiate(powerUp.item, transform.position, Quaternion.identity);
             }
         }

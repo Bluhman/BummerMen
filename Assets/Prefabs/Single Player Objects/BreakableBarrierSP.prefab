@@ -55,6 +55,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -70,6 +71,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -127,25 +129,32 @@ MonoBehaviour:
   startInvuln: 0
   isAPlayer: 0
   currentHealth: 1
+  hudForPlayer: {fileID: 0}
   currentInvulnTime: 0
+  dieSound: {fileID: 0}
   dropOnDeath:
     lootDropItems:
     - item: {fileID: 1440574875880498, guid: 10aa1b373e7c70e4c8834b66cd575659, type: 2}
       probabilityWeight: 1
-      probabilityPercent: 14.285714
+      probabilityPercent: 3.7037036
       probabilityRangeFrom: 0
       probabilityRangeTo: 1
     - item: {fileID: 1967829356274914, guid: df0b2a17b0a35824bb809fdd26f5914b, type: 2}
       probabilityWeight: 3
-      probabilityPercent: 42.857143
+      probabilityPercent: 11.111111
       probabilityRangeFrom: 1
       probabilityRangeTo: 4
     - item: {fileID: 1008298541205800, guid: f948371e4bc477348bd8506b9d4252e2, type: 2}
       probabilityWeight: 3
-      probabilityPercent: 42.857143
+      probabilityPercent: 11.111111
       probabilityRangeFrom: 4
       probabilityRangeTo: 7
-    probabilityTotalWeight: 7
+    - item: {fileID: 0}
+      probabilityWeight: 20
+      probabilityPercent: 74.07407
+      probabilityRangeFrom: 7
+      probabilityRangeTo: 27
+    probabilityTotalWeight: 27
   baseDropChance: 0.3
 --- !u!114 &114493053141762774
 MonoBehaviour:
@@ -163,6 +172,7 @@ MonoBehaviour:
   isAPlayer: 0
   currentHealth: 1
   currentInvulnTime: 0
+  dieSound: {fileID: 0}
   dropOnDeath:
     lootDropItems:
     - item: {fileID: 1440574875880498, guid: 5ca86ced87e45124094328715c3e4d03, type: 2}
