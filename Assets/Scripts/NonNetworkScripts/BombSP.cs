@@ -37,7 +37,7 @@ public class BombSP : MonoBehaviour
         model.transform.localScale = new Vector3(currentSize, currentSize, currentSize);
     }
 
-    void Explode()
+    public void Explode()
     {
         GameObject.Instantiate(noiseSource);
 
