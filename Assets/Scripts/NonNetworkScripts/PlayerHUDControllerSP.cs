@@ -5,9 +5,11 @@ using UnityEngine.UI;
 
 public class PlayerHUDControllerSP : MonoBehaviour {
 
-    public PlayerSP playerSP;
+    public PlayerSP[] playersSP;
     public GameObject GameOverText;
-    public Text LifeCounterText;
+    public GameObject lifeCounterTemplate;
+    Text[] lifeCounters;
+    public float counterSpacing;
     public Text TimerText;
     public GameObject pauseMenu;
     public Image dialogBox;
@@ -41,9 +43,22 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         messageQueue = new Queue<Message>();
         GameOverText.SetActive(false);
         pauseMenu.SetActive(false);
-        UpdateLives();
+        
         timer = timeLimit;
         currentMessage = new Message("", null, 0);
+
+        lifeCounters = new Text[playersSP.Length];
+
+        for (int i = 0; i < playersSP.Length; i++)
+        {
+            if (!playersSP[i].isActiveAndEnabled) continue;
+
+            GameObject lifeCounter = Instantiate(lifeCounterTemplate, transform);
+            lifeCounters[i] = lifeCounter.GetComponentInChildren<Text>();
+            lifeCounter.transform.position = new Vector2 (lifeCounter.transform.position.x + counterSpacing * i, lifeCounter.transform.position.y);
+            print(lifeCounter.transform.position);
+        }
+        UpdateLives();
 
         //Testing message display functions.
         ShowMessage(new Message("This is a test message", null, 3));
@@ -67,7 +82,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
             if (timer < 0)
             {
                 timer = 0;
-                playerSP.currentLives = 0;
+                for (int i = 0; i < playersSP.Length; i++)
+                    playersSP[i].currentLives = 0;
                 UpdateLives();
                 Time.timeScale = 0;
                 paused = true;
@@ -79,11 +95,18 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 	
     public void UpdateLives()
     {
-        LifeCounterText.text = " x " +playerSP.currentLives;
+        bool allDead = true;
 
-        if (playerSP.currentLives <= 0)
+        for (int i = 0; i < lifeCounters.Length; i++)
         {
-            GameOverText.SetActive(true);
+
+            lifeCounters[i].text = " x " + playersSP[i].currentLives;
+            if (playersSP[i].currentLives > 0) allDead = false;
+
+            if (allDead)
+            {
+                GameOverText.SetActive(true);
+            }
         }
     }
 
