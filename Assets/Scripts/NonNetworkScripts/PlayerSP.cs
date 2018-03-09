@@ -15,7 +15,11 @@ public class PlayerSP : MonoBehaviour {
     int yGridPos;
     public GameObject bombPrefab;
     public float gridSize;
-    public KeyCode layBombKey;
+
+    public int playerNumber;
+    public string layBombKey = "Fire1_P1";
+    public string horizAxis = "Horizontal_P1";
+    public string vertiAxis = "Vertical_P1";
 
     AudioSource AUDIO;
     public AudioClip pickUp;
@@ -33,8 +37,6 @@ public class PlayerSP : MonoBehaviour {
     [HideInInspector]
     public int currentLives;
 
-    int playerNumber = -1;
-
     CharacterController character;
     private CollisionFlags charCollisionFlags;
 
@@ -44,6 +46,38 @@ public class PlayerSP : MonoBehaviour {
     void Awake()
     {
         character = GetComponent<CharacterController>();
+
+        //set player color:
+        Color playerColor = Color.white;
+        switch (playerNumber)
+        {
+            case 1:
+                break;
+
+            case 2:
+                playerColor = Color.black;
+                break;
+            case 3:
+                playerColor = Color.red;
+                break;
+            case 4:
+                playerColor = Color.blue;
+                break;
+            case 5:
+                playerColor = Color.yellow;
+                break;
+            case 6:
+                playerColor = Color.magenta;
+                break;
+            case 7:
+                playerColor = Color.cyan;
+                break;
+            case 8:
+                playerColor = Color.green;
+                break;
+        }
+        GetComponent<Renderer>().material.color = playerColor;
+
         resetStats();
         currentLives = lives;
     }
@@ -63,7 +97,7 @@ public class PlayerSP : MonoBehaviour {
         if (Time.timeScale > 0)
         moveWithInput();
 
-        if (Input.GetKeyDown(layBombKey))
+        if (Input.GetButtonDown(layBombKey))
         {
             LayBomb();
         }
@@ -101,7 +135,7 @@ public class PlayerSP : MonoBehaviour {
     //Takes input to move the player.
     void moveWithInput()
     {
-        Vector3 plannedMovement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        Vector3 plannedMovement = new Vector3(Input.GetAxis(horizAxis), 0, Input.GetAxis(vertiAxis));
         
         if (plannedMovement.magnitude != 0)
         {

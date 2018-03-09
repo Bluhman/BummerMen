@@ -295,7 +295,10 @@ MonoBehaviour:
   speedPowerUpStep: 2
   bombPrefab: {fileID: 1119434983646254, guid: 999f77858b5fc8b43ba08ccf7c44997d, type: 2}
   gridSize: 1
-  layBombKey: 32
+  playerNumber: 1
+  layBombKey: Fire1_P1
+  horizAxis: Horizontal_P1
+  vertiAxis: Vertical_P1
   pickUp: {fileID: 8300000, guid: 30953a9133650ee4fa1edb3bc33dd3fa, type: 3}
   baseBombs: 3
   currentBombs: 0
