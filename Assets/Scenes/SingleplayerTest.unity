@@ -2933,6 +2933,10 @@ Prefab:
       propertyPath: vertiAxis
       value: Vertical_P2
       objectReference: {fileID: 0}
+    - target: {fileID: 1294724596866964, guid: 53fa3856fafffe044bdc4e73525915f7, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 53fa3856fafffe044bdc4e73525915f7, type: 2}
   m_IsPrefabParent: 0

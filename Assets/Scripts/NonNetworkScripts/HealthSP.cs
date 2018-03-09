@@ -79,17 +79,19 @@ public class HealthSP : MonoBehaviour
                 PlayerSP playerScript = GetComponent<PlayerSP>();
                 if (playerScript != null)
                 {
-                    playerScript.resetStats();
                     playerScript.currentLives--;
                     if (hudForPlayer != null)
                         hudForPlayer.UpdateLives();
                     print("reduced to " + playerScript.currentLives + " lives.");
+                    playerScript.DIE();
+                    /*
                     if (playerScript.currentLives > 0)
                         Respawn();
                     else
                     {
                         gameObject.SetActive(false);
                     }
+                    */
                 }
 
 
@@ -153,7 +155,7 @@ public class HealthSP : MonoBehaviour
         }
     }
 
-    void Respawn()
+    public void Respawn()
     {
         print("RESPAWN");
 

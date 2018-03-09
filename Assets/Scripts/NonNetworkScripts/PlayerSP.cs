@@ -42,10 +42,15 @@ public class PlayerSP : MonoBehaviour {
 
     [HideInInspector]
     public bool controllable = true;
+    [HideInInspector]
+    public bool dead = false;
+
+    HealthSP HSP;
 
     void Awake()
     {
         character = GetComponent<CharacterController>();
+        HSP = GetComponent<HealthSP>();
 
         //set player color:
         Color playerColor = Color.white;
@@ -93,6 +98,14 @@ public class PlayerSP : MonoBehaviour {
         setGridPositionFromRealPos();
 
         if (lives <= 0) return;
+
+        if (dead)
+        {
+            //Uhhhhhhhh play some animation iu ddunno
+            transform.position += new Vector3 (0,2*Time.deltaTime, 0);
+            transform.Rotate(transform.up, 1080 * Time.deltaTime);
+            return;
+        }
 
         if (Time.timeScale > 0)
         moveWithInput();
@@ -237,12 +250,31 @@ public class PlayerSP : MonoBehaviour {
         }
     }
 
+    public void DIE()
+    {
+        //Play the death animation
+        dead = true;
+        Invoke("invokedPostDeath", 1);
+    }
+
+    public void invokedPostDeath()
+    {
+        resetStats();
+        if (currentLives > 0)
+            HSP.Respawn();
+        else
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
     //Resets the stats to their original values.
     public void resetStats()
     {
         speed = baseSpeed;
         bombs = baseBombs;
         power = basePower;
+        dead = false;
     }
 
 }

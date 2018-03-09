@@ -99,6 +99,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
         for (int i = 0; i < lifeCounters.Length; i++)
         {
+            if (!playersSP[i].isActiveAndEnabled) continue;
 
             lifeCounters[i].text = " x " + playersSP[i].currentLives;
             if (playersSP[i].currentLives > 0) allDead = false;
