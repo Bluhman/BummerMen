@@ -15,7 +15,11 @@ public class PlayerSP : MonoBehaviour {
     int yGridPos;
     public GameObject bombPrefab;
     public float gridSize;
-    public KeyCode layBombKey;
+
+    public int playerNumber;
+    public string layBombKey = "Fire1_P1";
+    public string horizAxis = "Horizontal_P1";
+    public string vertiAxis = "Vertical_P1";
 
     AudioSource AUDIO;
     public AudioClip pickUp;
@@ -33,17 +37,52 @@ public class PlayerSP : MonoBehaviour {
     [HideInInspector]
     public int currentLives;
 
-    int playerNumber = -1;
-
     CharacterController character;
     private CollisionFlags charCollisionFlags;
 
     [HideInInspector]
     public bool controllable = true;
+    [HideInInspector]
+    public bool dead = false;
+
+    HealthSP HSP;
 
     void Awake()
     {
         character = GetComponent<CharacterController>();
+        HSP = GetComponent<HealthSP>();
+
+        //set player color:
+        Color playerColor = Color.white;
+        switch (playerNumber)
+        {
+            case 1:
+                break;
+
+            case 2:
+                playerColor = Color.black;
+                break;
+            case 3:
+                playerColor = Color.red;
+                break;
+            case 4:
+                playerColor = Color.blue;
+                break;
+            case 5:
+                playerColor = Color.yellow;
+                break;
+            case 6:
+                playerColor = Color.magenta;
+                break;
+            case 7:
+                playerColor = Color.cyan;
+                break;
+            case 8:
+                playerColor = Color.green;
+                break;
+        }
+        GetComponent<Renderer>().material.color = playerColor;
+
         resetStats();
         currentLives = lives;
     }
@@ -60,10 +99,18 @@ public class PlayerSP : MonoBehaviour {
 
         if (lives <= 0) return;
 
+        if (dead)
+        {
+            //Uhhhhhhhh play some animation iu ddunno
+            transform.position += new Vector3 (0,2*Time.deltaTime, 0);
+            transform.Rotate(transform.up, 1080 * Time.deltaTime);
+            return;
+        }
+
         if (Time.timeScale > 0)
         moveWithInput();
 
-        if (Input.GetKeyDown(layBombKey))
+        if (Input.GetButtonDown(layBombKey))
         {
             LayBomb();
         }
@@ -101,7 +148,7 @@ public class PlayerSP : MonoBehaviour {
     //Takes input to move the player.
     void moveWithInput()
     {
-        Vector3 plannedMovement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        Vector3 plannedMovement = new Vector3(Input.GetAxis(horizAxis), 0, Input.GetAxis(vertiAxis));
         
         if (plannedMovement.magnitude != 0)
         {
@@ -203,12 +250,31 @@ public class PlayerSP : MonoBehaviour {
         }
     }
 
+    public void DIE()
+    {
+        //Play the death animation
+        dead = true;
+        Invoke("invokedPostDeath", 1);
+    }
+
+    public void invokedPostDeath()
+    {
+        resetStats();
+        if (currentLives > 0)
+            HSP.Respawn();
+        else
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
     //Resets the stats to their original values.
     public void resetStats()
     {
         speed = baseSpeed;
         bombs = baseBombs;
         power = basePower;
+        dead = false;
     }
 
 }
