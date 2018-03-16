@@ -102,7 +102,7 @@ public class PlayerSP : MonoBehaviour {
         if (dead)
         {
             //Uhhhhhhhh play some animation iu ddunno
-            transform.position += new Vector3 (0,2*Time.deltaTime, 0);
+            transform.position += new Vector3 (0,70*Time.deltaTime, 0);
             transform.Rotate(transform.up, 1080 * Time.deltaTime);
             return;
         }
@@ -148,6 +148,11 @@ public class PlayerSP : MonoBehaviour {
     //Takes input to move the player.
     void moveWithInput()
     {
+        //REALLY MAKE SURE THE Y POSITION REMAINS LOCKED
+        Vector3 temp = transform.position;
+        temp.y = 0.5f;
+        transform.position = temp;
+
         Vector3 plannedMovement = new Vector3(Input.GetAxis(horizAxis), 0, Input.GetAxis(vertiAxis));
         
         if (plannedMovement.magnitude != 0)

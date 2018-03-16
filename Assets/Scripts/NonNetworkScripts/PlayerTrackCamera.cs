@@ -9,7 +9,7 @@ using UnityEngine;
 public class PlayerTrackCamera : MonoBehaviour {
     public GameObject[] playersToTrack;
     private GameObject listenerProbe;
-    private Vector3 playerPosition;
+    public Vector3 playerPosition;
     private Vector3 lastKnownLegalPosition;
     
     public float xAngle = 70f;
