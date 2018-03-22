@@ -8,7 +8,10 @@ public class BombSP : MonoBehaviour
     public GameObject explosion;
     public LayerMask levelMask;
     private bool exploded = false;
+    public bool powerBomb = false;
+    public bool triggerBomb = false;
     public GameObject noiseSource;
+    public string triggerKey = "nope";
 
     [HideInInspector]
     public PlayerSP owner;
@@ -27,7 +30,29 @@ public class BombSP : MonoBehaviour
     void Start()
     {
         bombPulsePeriod = 0f;
-        Invoke("Explode", explosionTime);
+        if (!triggerBomb)
+            Invoke("Explode", explosionTime);
+    }
+
+    public void SwapModel()
+    {
+        //This script will swap the model used by the bomb depending on what bomb type it is (trigger, power, etc). todo: ask allen and the folks to make alternate models lol like that's happening.
+        if (powerBomb)
+        {
+            //Just recolor for now.
+            Material theMaterial = model.GetComponent<Renderer>().material;
+            theMaterial.color = new Color(1, 0.4f, 0.4f, 1);
+
+            bombPulseMagnitude *= 2; //power bombs pulse a LOT.
+        }
+        if (triggerBomb)
+        {
+            //Just recolor for now.
+            Material theMaterial = model.GetComponent<Renderer>().material;
+            theMaterial.color = new Color(0.4f, 1, 1, 1);
+
+            bombPulseMagnitude = 0f; //Trigger bombs don't pulse.
+        }
     }
 
     private void Update()
@@ -35,6 +60,15 @@ public class BombSP : MonoBehaviour
         bombPulsePeriod += Time.deltaTime;
         float currentSize = bombLocalScale + bombPulseMagnitude * Mathf.Sin(bombPulseSpeed * bombPulsePeriod);
         model.transform.localScale = new Vector3(currentSize, currentSize, currentSize);
+
+        if (triggerBomb)
+        {
+            //Input detector for trigger bombs.
+            if (Input.GetButtonDown(triggerKey) && !exploded)
+            {
+                Explode();
+            }
+        }
     }
 
     public void Explode()
@@ -94,7 +128,7 @@ public class BombSP : MonoBehaviour
                 }
             }
 
-            if (!barrierBlocking)
+            if (!barrierBlocking || powerBomb)
             {
                 print("No diagonal from " + diagonalAngle);
                 
@@ -134,7 +168,7 @@ public class BombSP : MonoBehaviour
             RaycastHit hit;
             Physics.Raycast(transform.position + new Vector3(0, .5f, 0), direction, out hit, i, levelMask);
 
-            if (!hit.collider)
+            if (!hit.collider || powerBomb)
             {
                 //GameObject expl =Instantiate(explosion, transform.position + (i * direction),
                 //  explosion.transform.rotation);
@@ -148,7 +182,7 @@ public class BombSP : MonoBehaviour
             }
             else
             {
-                if (hit.collider.GetComponent<Health>() != null)
+                if (hit.collider.GetComponent<HealthSP>() != null)
                 {
                     //  GameObject expl = Instantiate(explosion, transform.position + (i * direction),
                     //explosion.transform.rotation);

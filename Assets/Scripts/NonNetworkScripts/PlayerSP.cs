@@ -18,6 +18,7 @@ public class PlayerSP : MonoBehaviour {
 
     public int playerNumber;
     public string layBombKey = "Fire1_P1";
+    public string triggerKey = "Fire2_P1";
     public string horizAxis = "Horizontal_P1";
     public string vertiAxis = "Vertical_P1";
 
@@ -29,6 +30,9 @@ public class PlayerSP : MonoBehaviour {
     public int currentBombs;
     public int basePower = 3;
     int power;
+
+    public bool powerBomb;
+    public bool remoteBomb;
 
     public int maxBombs = 6;
     public int maxPower = 12;
@@ -143,6 +147,10 @@ public class PlayerSP : MonoBehaviour {
         BombSP bombScript = bomb.GetComponent<BombSP>();
         bombScript.owner = this;
         bombScript.power = power;
+        bombScript.powerBomb = powerBomb;
+        bombScript.triggerBomb = remoteBomb;
+        bombScript.triggerKey = triggerKey;
+        bombScript.SwapModel();
     }
 
     //Takes input to move the player.
@@ -224,6 +232,7 @@ public class PlayerSP : MonoBehaviour {
     //Method called when the player picks up a PowerUp. This matches up the number of the powerup to an effect.
      public void applyPowerup(int type)
     {
+        AUDIO.pitch = 1f;
         AUDIO.clip = pickUp;
         AUDIO.Play();
 
@@ -246,8 +255,19 @@ public class PlayerSP : MonoBehaviour {
                 break;
             case 3:
                 //Slow down.
+                AUDIO.pitch = 0.5f;
                 speed -= speedPowerUpStep;
                 speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+                break;
+            case 4:
+                //POWER BOMB!
+                powerBomb = true;
+                remoteBomb = false;//If we want to make these exclusive. I think it's a good idea.
+                break;
+            case 5:
+                //REMOTE BOMB!
+                remoteBomb = true;
+                powerBomb = false;
                 break;
             default:
                 //Do nothing because it's not a valid powerup.
@@ -279,6 +299,7 @@ public class PlayerSP : MonoBehaviour {
         speed = baseSpeed;
         bombs = baseBombs;
         power = basePower;
+        powerBomb = remoteBomb = false;
         dead = false;
     }
 
