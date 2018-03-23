@@ -95,6 +95,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 	
     public void UpdateLives()
     {
+        print("UPDATELIVES");
+
         bool allDead = true;
 
         for (int i = 0; i < lifeCounters.Length; i++)

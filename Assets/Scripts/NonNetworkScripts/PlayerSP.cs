@@ -13,6 +13,11 @@ public class PlayerSP : MonoBehaviour {
     public float speedPowerUpStep;
     int xGridPos;
     int yGridPos;
+    public Vector2 gridPos
+    {
+        get { return new Vector2(xGridPos, yGridPos); }
+    }
+
     public GameObject bombPrefab;
     public float gridSize;
 

@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114597679509375330}
   - component: {fileID: 114326301224007008}
   - component: {fileID: 54513865856311422}
+  - component: {fileID: 114853665246244542}
   m_Layer: 8
   m_Name: BreakableBarrierSP
   m_TagString: Untagged
@@ -54,6 +55,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -69,6 +71,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -125,10 +128,12 @@ MonoBehaviour:
   invulnTime: 3
   startInvuln: 0
   isAPlayer: 0
+  zappable: 1
   currentHealth: 1
   hudForPlayer: {fileID: 0}
   currentInvulnTime: 0
   dieSound: {fileID: 0}
+  spawnPoints: []
   dropOnDeath:
     lootDropItems:
     - item: {fileID: 1440574875880498, guid: 10aa1b373e7c70e4c8834b66cd575659, type: 2}
@@ -199,3 +204,17 @@ MonoBehaviour:
     i15: 35
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114853665246244542
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1287479061677544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c5ded56d25d7474ea7ff20589af5c2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridSize: 1
+  mobile: 0
+  blocks: 1

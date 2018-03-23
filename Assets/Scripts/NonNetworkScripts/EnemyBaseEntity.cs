@@ -11,8 +11,13 @@ public class EnemyBaseEntity : MonoBehaviour {
     public float turnSpeed;
     int xGridPos;
     int yGridPos;
+    public Vector2 gridPos
+    {
+        get { return new Vector2(xGridPos, yGridPos); }
+    }
     public float gridSize;
-    Vector3 currentLocation;
+    [HideInInspector]
+    public Vector3 currentLocation;
     [HideInInspector]
     public Vector3 nextLocation;
     float movePercentage;
@@ -30,11 +35,12 @@ public class EnemyBaseEntity : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
     }
 	
 	// Update is called once per frame
 	void Update () {
+
+        setGridPositionFromRealPos();
 
         if (dead)
         {
@@ -65,6 +71,8 @@ public class EnemyBaseEntity : MonoBehaviour {
             }
         }
 	}
+
+
 
     //Navigation logic for the enemy is put here. Optimally you'd sub out the contents of this function to make for some strategy.
     //For now this just picks one of four random cardinal directions to move in.

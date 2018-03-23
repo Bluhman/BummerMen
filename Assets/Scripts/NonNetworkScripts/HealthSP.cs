@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class HealthSP : MonoBehaviour
 {
@@ -10,6 +9,7 @@ public class HealthSP : MonoBehaviour
     public float invulnTime = 3.0f;
     public bool startInvuln = true;
     public bool isAPlayer = true;
+    public bool zappable = true; //USED TO MAKE THINGS INVULNERABLE TO THE LIGHTNING!
     public int currentHealth = 1;
     public PlayerHUDControllerSP hudForPlayer;
 
@@ -20,7 +20,7 @@ public class HealthSP : MonoBehaviour
     bool looksInvuln;
     bool alreadyDead;
 
-    private NetworkStartPosition[] spawnPoints;
+    public Vector3[] spawnPoints;
 
     //public GameObject[] dropOnDeath;
     public GenericLootDropTableGameObject dropOnDeath;
@@ -42,8 +42,6 @@ public class HealthSP : MonoBehaviour
         GetComponent<Renderer>().material.color = invulnColor;
 
         AUDIO = GetComponent<AudioSource>();
-
-        spawnPoints = FindObjectsOfType<NetworkStartPosition>();
 
         alreadyDead = false;
 
@@ -172,7 +170,7 @@ public class HealthSP : MonoBehaviour
         // If there is a spawn point array and the array is not empty, pick a spawn point at random
         if (spawnPoints != null && spawnPoints.Length > 0)
         {
-            spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
+            spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
         }
 
         // Set the player’s position to the chosen spawn point
