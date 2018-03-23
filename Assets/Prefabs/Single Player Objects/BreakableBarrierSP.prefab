@@ -23,7 +23,6 @@ GameObject:
   - component: {fileID: 65612736132799976}
   - component: {fileID: 23872347465959986}
   - component: {fileID: 114597679509375330}
-  - component: {fileID: 114493053141762774}
   - component: {fileID: 114326301224007008}
   - component: {fileID: 54513865856311422}
   m_Layer: 8
@@ -40,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1287479061677544}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: -21.997396, y: 0.5, z: -19.768356}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -55,7 +54,6 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -71,7 +69,6 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -136,62 +133,40 @@ MonoBehaviour:
     lootDropItems:
     - item: {fileID: 1440574875880498, guid: 10aa1b373e7c70e4c8834b66cd575659, type: 2}
       probabilityWeight: 1
-      probabilityPercent: 3.7037036
+      probabilityPercent: 2.857143
       probabilityRangeFrom: 0
       probabilityRangeTo: 1
     - item: {fileID: 1967829356274914, guid: df0b2a17b0a35824bb809fdd26f5914b, type: 2}
       probabilityWeight: 3
-      probabilityPercent: 11.111111
+      probabilityPercent: 8.571428
       probabilityRangeFrom: 1
       probabilityRangeTo: 4
     - item: {fileID: 1008298541205800, guid: f948371e4bc477348bd8506b9d4252e2, type: 2}
       probabilityWeight: 3
-      probabilityPercent: 11.111111
+      probabilityPercent: 8.571428
       probabilityRangeFrom: 4
       probabilityRangeTo: 7
-    - item: {fileID: 0}
-      probabilityWeight: 20
-      probabilityPercent: 74.07407
+    - item: {fileID: 1440574875880498, guid: 627c753886e81f743976caaab7401f33, type: 2}
+      probabilityWeight: 1
+      probabilityPercent: 2.857143
       probabilityRangeFrom: 7
-      probabilityRangeTo: 27
-    probabilityTotalWeight: 27
-  baseDropChance: 0.3
---- !u!114 &114493053141762774
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1287479061677544}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4232f4fd47a4d4f47bc74eb2cbc89ce1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  invulnTime: 0
-  startInvuln: 0
-  isAPlayer: 0
-  currentHealth: 1
-  currentInvulnTime: 0
-  dieSound: {fileID: 0}
-  dropOnDeath:
-    lootDropItems:
-    - item: {fileID: 1440574875880498, guid: 5ca86ced87e45124094328715c3e4d03, type: 2}
-      probabilityWeight: 0.4
-      probabilityPercent: 11.764706
-      probabilityRangeFrom: 0
-      probabilityRangeTo: 0.4
-    - item: {fileID: 1967829356274914, guid: e179b32c798862f439b31123048aa3d0, type: 2}
-      probabilityWeight: 1.5
-      probabilityPercent: 44.117645
-      probabilityRangeFrom: 0.4
-      probabilityRangeTo: 1.9
-    - item: {fileID: 1008298541205800, guid: 183d8c20789eab242b8687565eef02c8, type: 2}
-      probabilityWeight: 1.5
-      probabilityPercent: 44.117645
-      probabilityRangeFrom: 1.9
-      probabilityRangeTo: 3.4
-    probabilityTotalWeight: 3.4
-  baseDropChance: 0.4
+      probabilityRangeTo: 8
+    - item: {fileID: 1422623311155526, guid: 38716c4f30df0c648804fca769674a8f, type: 2}
+      probabilityWeight: 0.5
+      probabilityPercent: 1.4285715
+      probabilityRangeFrom: 8
+      probabilityRangeTo: 8.5
+    - item: {fileID: 1291832318647128, guid: 2a0ab9b7f96940a46b1f19b321901546, type: 2}
+      probabilityWeight: 0.5
+      probabilityPercent: 1.4285715
+      probabilityRangeFrom: 8.5
+      probabilityRangeTo: 9
+    - item: {fileID: 0}
+      probabilityWeight: 26
+      probabilityPercent: 74.28571
+      probabilityRangeFrom: 9
+      probabilityRangeTo: 35
+    probabilityTotalWeight: 35
 --- !u!114 &114597679509375330
 MonoBehaviour:
   m_ObjectHideFlags: 1

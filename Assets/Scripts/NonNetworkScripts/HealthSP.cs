@@ -24,7 +24,6 @@ public class HealthSP : MonoBehaviour
 
     //public GameObject[] dropOnDeath;
     public GenericLootDropTableGameObject dropOnDeath;
-    public float baseDropChance; //Chance that anything drops to start with.
 
     Color playerColor;
     Color invulnColor;
@@ -79,17 +78,19 @@ public class HealthSP : MonoBehaviour
                 PlayerSP playerScript = GetComponent<PlayerSP>();
                 if (playerScript != null)
                 {
-                    playerScript.resetStats();
                     playerScript.currentLives--;
                     if (hudForPlayer != null)
                         hudForPlayer.UpdateLives();
                     print("reduced to " + playerScript.currentLives + " lives.");
+                    playerScript.DIE();
+                    /*
                     if (playerScript.currentLives > 0)
                         Respawn();
                     else
                     {
                         gameObject.SetActive(false);
                     }
+                    */
                 }
 
 
@@ -108,7 +109,16 @@ public class HealthSP : MonoBehaviour
     //Regardless, it will destroy the given object.
     void ItemSpawnDestroy()
     {
-        //print("rpcitemspawn "+dropOnDeath.Length);
+        /*
+        print("rpcitemspawn "+dropOnDeath.lootDropItems.Count);
+        for (int i = 0; i < dropOnDeath.lootDropItems.Count; i++) 
+        {
+            if (dropOnDeath.lootDropItems[i].item != null)
+            print(dropOnDeath.lootDropItems[i].item.name);
+        }
+        */
+        Debug.Log(dropOnDeath);
+
         if (dropOnDeath.lootDropItems.Count > 0)
         {
             //GameObject powerUp = Instantiate(dropOnDeath[Random.Range(0, dropOnDeath.Length)], transform.position, Quaternion.identity);
@@ -131,7 +141,6 @@ public class HealthSP : MonoBehaviour
 
     void OnValidate()
     {
-
         // Validate table and notify the programmer / designer if something went wrong.
         dropOnDeath.ValidateTable();
     }
@@ -153,7 +162,7 @@ public class HealthSP : MonoBehaviour
         }
     }
 
-    void Respawn()
+    public void Respawn()
     {
         print("RESPAWN");
 
