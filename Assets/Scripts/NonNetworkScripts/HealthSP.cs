@@ -47,7 +47,12 @@ public class HealthSP : MonoBehaviour
 
     }
 
-    public void TakeDamage(int amount)
+    public void HealUp(int amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth+1, 0, maxHealth);
+    }
+
+    public void TakeDamage(int amount, bool canGenerateDrop = true)
     {
         print("I will now take damage." + currentInvulnTime);
 
@@ -93,7 +98,7 @@ public class HealthSP : MonoBehaviour
 
 
             }
-            else
+            else if (canGenerateDrop)
             {
                 ItemSpawnDestroy();
             }
@@ -115,7 +120,6 @@ public class HealthSP : MonoBehaviour
             print(dropOnDeath.lootDropItems[i].item.name);
         }
         */
-        Debug.Log(dropOnDeath);
 
         if (dropOnDeath.lootDropItems.Count > 0)
         {

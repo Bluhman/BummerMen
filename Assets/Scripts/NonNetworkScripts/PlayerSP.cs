@@ -260,7 +260,8 @@ public class PlayerSP : MonoBehaviour {
                 break;
             case 3:
                 //Slow down.
-                AUDIO.pitch = 0.5f;
+                AUDIO.pitch = -0.5f;
+                AUDIO.Play();
                 speed -= speedPowerUpStep;
                 speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
                 break;
@@ -273,6 +274,17 @@ public class PlayerSP : MonoBehaviour {
                 //REMOTE BOMB!
                 remoteBomb = true;
                 powerBomb = false;
+                break;
+            case 6:
+                //Curse! Resets your power.
+                AUDIO.pitch = -1f;
+                AUDIO.Play();
+                resetStats();
+                HSP.currentHealth = 1;
+                break;
+            case 7:
+                //Don't worry my friends! I am your shield!
+                HSP.HealUp(1);
                 break;
             default:
                 //Do nothing because it's not a valid powerup.

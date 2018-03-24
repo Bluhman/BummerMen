@@ -39,7 +39,7 @@ public class Projectile : MonoBehaviour {
         if (thingHit != null)
         {
             if (destroysBlocks || other.gameObject.layer != 8)
-                thingHit.TakeDamage(1);
+                thingHit.TakeDamage(1, false);
         }
 
         BombSP daBomb = other.GetComponent<BombSP>();

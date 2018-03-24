@@ -55,7 +55,6 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -71,7 +70,6 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -138,40 +136,50 @@ MonoBehaviour:
     lootDropItems:
     - item: {fileID: 1440574875880498, guid: 10aa1b373e7c70e4c8834b66cd575659, type: 2}
       probabilityWeight: 1
-      probabilityPercent: 2.857143
+      probabilityPercent: 2.7700832
       probabilityRangeFrom: 0
       probabilityRangeTo: 1
     - item: {fileID: 1967829356274914, guid: df0b2a17b0a35824bb809fdd26f5914b, type: 2}
       probabilityWeight: 3
-      probabilityPercent: 8.571428
+      probabilityPercent: 8.310249
       probabilityRangeFrom: 1
       probabilityRangeTo: 4
     - item: {fileID: 1008298541205800, guid: f948371e4bc477348bd8506b9d4252e2, type: 2}
       probabilityWeight: 3
-      probabilityPercent: 8.571428
+      probabilityPercent: 8.310249
       probabilityRangeFrom: 4
       probabilityRangeTo: 7
     - item: {fileID: 1440574875880498, guid: 627c753886e81f743976caaab7401f33, type: 2}
       probabilityWeight: 1
-      probabilityPercent: 2.857143
+      probabilityPercent: 2.7700832
       probabilityRangeFrom: 7
       probabilityRangeTo: 8
     - item: {fileID: 1422623311155526, guid: 38716c4f30df0c648804fca769674a8f, type: 2}
       probabilityWeight: 0.5
-      probabilityPercent: 1.4285715
+      probabilityPercent: 1.3850416
       probabilityRangeFrom: 8
       probabilityRangeTo: 8.5
     - item: {fileID: 1291832318647128, guid: 2a0ab9b7f96940a46b1f19b321901546, type: 2}
       probabilityWeight: 0.5
-      probabilityPercent: 1.4285715
+      probabilityPercent: 1.3850416
       probabilityRangeFrom: 8.5
       probabilityRangeTo: 9
+    - item: {fileID: 1714400549254136, guid: 96bcbaacecd3b544d9cef8cf59fb4b5f, type: 2}
+      probabilityWeight: 0.3
+      probabilityPercent: 0.831025
+      probabilityRangeFrom: 9
+      probabilityRangeTo: 9.3
+    - item: {fileID: 1440574875880498, guid: dde519506e8f641478be3c6df468a710, type: 2}
+      probabilityWeight: 0.8
+      probabilityPercent: 2.2160666
+      probabilityRangeFrom: 9.3
+      probabilityRangeTo: 10.1
     - item: {fileID: 0}
       probabilityWeight: 26
-      probabilityPercent: 74.28571
-      probabilityRangeFrom: 9
-      probabilityRangeTo: 35
-    probabilityTotalWeight: 35
+      probabilityPercent: 72.02216
+      probabilityRangeFrom: 10.1
+      probabilityRangeTo: 36.1
+    probabilityTotalWeight: 36.1
 --- !u!114 &114597679509375330
 MonoBehaviour:
   m_ObjectHideFlags: 1

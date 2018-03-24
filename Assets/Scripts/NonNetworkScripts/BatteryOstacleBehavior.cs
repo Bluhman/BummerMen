@@ -60,7 +60,7 @@ public class BatteryOstacleBehavior : MonoBehaviour {
             HealthSP targetHP = hits[i].transform.gameObject.GetComponent<HealthSP>();
             if (targetHP != null)
                 if (targetHP.zappable)
-                    targetHP.TakeDamage(1);
+                    targetHP.TakeDamage(1, false);
             else if (hits[i].transform.CompareTag("bomb"))
             {
                 hits[i].transform.gameObject.GetComponent<BombSP>().Explode();
