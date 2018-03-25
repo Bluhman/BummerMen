@@ -238,6 +238,7 @@ public class PlayerSP : MonoBehaviour {
      public void applyPowerup(int type)
     {
         AUDIO.pitch = 1f;
+        AUDIO.timeSamples = 0;
         AUDIO.clip = pickUp;
         AUDIO.Play();
 
@@ -261,6 +262,7 @@ public class PlayerSP : MonoBehaviour {
             case 3:
                 //Slow down.
                 AUDIO.pitch = -0.5f;
+                AUDIO.timeSamples = AUDIO.clip.samples -1;
                 AUDIO.Play();
                 speed -= speedPowerUpStep;
                 speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
@@ -278,6 +280,7 @@ public class PlayerSP : MonoBehaviour {
             case 6:
                 //Curse! Resets your power.
                 AUDIO.pitch = -1f;
+                AUDIO.timeSamples = AUDIO.clip.samples -1;
                 AUDIO.Play();
                 resetStats();
                 HSP.currentHealth = 1;

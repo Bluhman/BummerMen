@@ -68,6 +68,8 @@ public class HealthSP : MonoBehaviour
             //Play death sound if it has one.
             if (AUDIO != null || dieSound != null)
             {
+                AUDIO.pitch = 1f;
+                AUDIO.timeSamples = 0;
                 AUDIO.clip = dieSound;
                 AUDIO.Play();
             }

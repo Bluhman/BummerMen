@@ -20,6 +20,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     [HideInInspector]
     public bool paused = false;
 
+    public bool versus = false;
+
 
     public float typeInTime; //time it takes for each letter to be typed into the box.
     float typeInTimer;
@@ -55,15 +57,25 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
             GameObject lifeCounter = Instantiate(lifeCounterTemplate, transform);
             lifeCounters[i] = lifeCounter.GetComponentInChildren<Text>();
-            lifeCounter.transform.position = new Vector2 (lifeCounter.transform.position.x + counterSpacing * i, lifeCounter.transform.position.y);
-            print(lifeCounter.transform.position);
+            if (versus)
+            {
+                //Lists life counters vertically.
+                lifeCounter.transform.position = new Vector2(lifeCounter.transform.position.x , lifeCounter.transform.position.y - counterSpacing * i);
+                TimerText.transform.position -= new Vector3(0 , counterSpacing);
+            }
+            else
+            {
+                //Lists life counters horizontally.
+                lifeCounter.transform.position = new Vector2(lifeCounter.transform.position.x + counterSpacing * i, lifeCounter.transform.position.y);
+            }
+            //print(lifeCounter.transform.position);
         }
         UpdateLives();
 
         //Testing message display functions.
-        ShowMessage(new Message("This is a test message", null, 3));
-        ShowMessage(new Message("Isn't that neat?", null, 3));
-        ShowMessage(new Message("I can also change my face!", testSprite, 5));
+        //ShowMessage(new Message("This is a test message", null, 3));
+        //ShowMessage(new Message("Isn't that neat?", null, 3));
+        //ShowMessage(new Message("I can also change my face!", testSprite, 5));
     }
 
     void Update()
@@ -98,18 +110,37 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         print("UPDATELIVES");
 
         bool allDead = true;
+        bool oneRemains = true;
 
         for (int i = 0; i < lifeCounters.Length; i++)
         {
             if (!playersSP[i].isActiveAndEnabled) continue;
 
             lifeCounters[i].text = " x " + playersSP[i].currentLives;
-            if (playersSP[i].currentLives > 0) allDead = false;
+            if (playersSP[i].currentLives > 0)
+            {
+                if (!allDead)
+                {
+                    oneRemains = false;
+                    print("there is more than one remaining.");
+                }
+                allDead = false;
+                print("not all are dead.");
+            }
 
             if (allDead)
             {
                 GameOverText.SetActive(true);
+                print("I think everyone is dead.");
             }
+
+            
+        }
+
+        if (oneRemains && versus)
+        {
+            GameOverText.SetActive(true);
+            print("I think there is one winner.");
         }
     }
 

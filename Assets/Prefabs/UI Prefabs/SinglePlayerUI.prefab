@@ -317,9 +317,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a164476d65fe3be40aed2b723bc2cba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSP: {fileID: 0}
+  playersSP: []
   GameOverText: {fileID: 1134165951045146}
-  LifeCounterText: {fileID: 0}
+  lifeCounterTemplate: {fileID: 1671650676716416, guid: 1b91838021ef0b34b9c1d9642d77f0c4,
+    type: 2}
+  counterSpacing: 130
   TimerText: {fileID: 114233495779673580}
   pauseMenu: {fileID: 1400485927863236}
   dialogBox: {fileID: 114259657787004938}
@@ -327,6 +329,7 @@ MonoBehaviour:
   dialogText: {fileID: 114980365289578956}
   timeLimit: 240
   paused: 0
+  versus: 0
   typeInTime: 0
   messageDisplayTime: 0
   timeAfterMessage: 0
