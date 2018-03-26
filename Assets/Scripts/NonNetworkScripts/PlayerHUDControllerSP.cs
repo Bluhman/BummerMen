@@ -21,6 +21,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     public bool paused = false;
 
     public bool versus = false;
+    int currentWinner;
 
 
     public float typeInTime; //time it takes for each letter to be typed into the box.
@@ -61,7 +62,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
             {
                 //Lists life counters vertically.
                 lifeCounter.transform.position = new Vector2(lifeCounter.transform.position.x , lifeCounter.transform.position.y - counterSpacing * i);
-                TimerText.transform.position -= new Vector3(0 , counterSpacing);
+                if (i > 0)
+                    TimerText.transform.position -= new Vector3(0 , counterSpacing);
             }
             else
             {
@@ -122,25 +124,44 @@ public class PlayerHUDControllerSP : MonoBehaviour {
                 if (!allDead)
                 {
                     oneRemains = false;
-                    print("there is more than one remaining.");
+                    //print("there is more than one remaining.");
                 }
                 allDead = false;
-                print("not all are dead.");
+                currentWinner = i + 1;
+                //print("not all are dead.");
             }
 
             if (allDead)
             {
+                if (versus)
+                {
+                    Text theText = GameOverText.GetComponent<Text>();
+                    if (theText != null)
+                    {
+                        theText.text = "DRAW";
+                    }
+                    Time.timeScale = 0;
+                    paused = true;
+                }
+
                 GameOverText.SetActive(true);
-                print("I think everyone is dead.");
+                //print("I think everyone is dead.");
             }
 
             
         }
 
-        if (oneRemains && versus)
+        if (!allDead && oneRemains && versus)
         {
+            Text theText = GameOverText.GetComponent<Text>();
+            if (theText != null)
+            {
+                theText.text = "Player " + currentWinner + " wins!";
+            }
             GameOverText.SetActive(true);
-            print("I think there is one winner.");
+            Time.timeScale = 0;
+            paused = true;
+            //print("I think there is one winner.");
         }
     }
 
