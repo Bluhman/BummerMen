@@ -94,6 +94,13 @@ public class PlayerSP : MonoBehaviour {
 
         resetStats();
         currentLives = lives;
+
+        //special check: depending on the gamecontroller's player number, we might not want to spawn players.
+        //The one exception is player 1 themselves.
+        if (playerNumber > 1 && playerNumber > GameController.instance.players)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
 	// Use this for initialization

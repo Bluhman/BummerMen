@@ -19,7 +19,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     float timer;
     [HideInInspector]
     public bool paused = false;
-
+    bool gameOver;
     public bool versus = false;
     int currentWinner;
 
@@ -46,6 +46,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         messageQueue = new Queue<Message>();
         GameOverText.SetActive(false);
         pauseMenu.SetActive(false);
+        gameOver = false;
         
         timer = timeLimit;
         currentMessage = new Message("", null, 0);
@@ -86,6 +87,15 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         {
             print("PAUSE?");
             TogglePause();
+        }
+
+        if (gameOver)
+        {
+            if (Input.GetButtonDown("Submit"))
+            {
+                //Return to title screen.
+                GameController.instance.LoadNewScene(GameController.MAIN_MENU_INDEX);
+            }
         }
 
         HandleMessages();
@@ -145,6 +155,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
                 }
 
                 GameOverText.SetActive(true);
+                gameOver = true;
                 //print("I think everyone is dead.");
             }
 
@@ -159,6 +170,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
                 theText.text = "Player " + currentWinner + " wins!";
             }
             GameOverText.SetActive(true);
+            gameOver = true;
             Time.timeScale = 0;
             paused = true;
             //print("I think there is one winner.");

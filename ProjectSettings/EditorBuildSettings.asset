@@ -4,4 +4,13 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/VersusMenu.unity
+    guid: da0e7b0bce4860d4485b968be50d911f
+  - enabled: 1
+    path: Assets/Scenes/Versus.unity
+    guid: 4d3d6b04cf2985c49bdd955ef0acfdbf
+  - enabled: 1
+    path: Assets/Scenes/SingleplayerTest.unity
+    guid: 7c5e0f1e2cd372e4faa03752144508a3

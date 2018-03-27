@@ -30,6 +30,7 @@ public class VersusPlayerSlotUI : MonoBehaviour {
             ready = true;
             statusTag.text = "READY!";
             myImage.color = playerColor;
+            GameController.instance.players++;
         }
 
         if (Input.GetButtonDown(playerCancelButton) && ready)
@@ -37,6 +38,7 @@ public class VersusPlayerSlotUI : MonoBehaviour {
             ready = false;
             statusTag.text = "Press Start to Join";
             myImage.color = baseColor;
+            GameController.instance.players--;
         }
 	}
 }
