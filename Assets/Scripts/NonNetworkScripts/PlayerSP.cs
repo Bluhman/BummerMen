@@ -53,6 +53,8 @@ public class PlayerSP : MonoBehaviour {
     public bool controllable = true;
     [HideInInspector]
     public bool dead = false;
+    [HideInInspector]
+    public Color playerColor;
 
     HealthSP HSP;
 
@@ -62,7 +64,7 @@ public class PlayerSP : MonoBehaviour {
         HSP = GetComponent<HealthSP>();
 
         //set player color:
-        Color playerColor = Color.white;
+        playerColor = Color.cyan;
         switch (playerNumber)
         {
             case 1:

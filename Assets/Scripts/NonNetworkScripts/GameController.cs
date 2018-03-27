@@ -17,6 +17,8 @@ public class GameController : MonoBehaviour {
     private AudioSource music;
     [HideInInspector]
     public int players;
+    [HideInInspector]
+    public bool versus;
 
     void Awake()
     {

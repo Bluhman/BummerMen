@@ -75,6 +75,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         }
         UpdateLives();
 
+        GameController.instance.versus = this.versus;
+
         //Testing message display functions.
         //ShowMessage(new Message("This is a test message", null, 3));
         //ShowMessage(new Message("Isn't that neat?", null, 3));
