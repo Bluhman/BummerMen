@@ -74,7 +74,7 @@ public class BombSP : MonoBehaviour
         if (triggerBomb)
         {
             //Input detector for trigger bombs.
-            if (playerController.Action2.WasPressed && !exploded)
+            if (playerController.Action3.WasPressed && !exploded)
             {
                 Explode();
             }

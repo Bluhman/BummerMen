@@ -183,7 +183,10 @@ public class PlayerSP : MonoBehaviour {
         temp.y = 0.5f;
         transform.position = temp;
 
-        Vector3 plannedMovement = new Vector3(playerController.LeftStickX, 0, playerController.LeftStickY);
+        float xMovementSum = Mathf.Clamp(playerController.LeftStickX + playerController.DPadX, -1, 1);
+        float yMovementSum = Mathf.Clamp(playerController.LeftStickY + playerController.DPadY, -1, 1);
+
+        Vector3 plannedMovement = new Vector3(xMovementSum, 0, yMovementSum);
         
         if (plannedMovement.magnitude != 0)
         {
