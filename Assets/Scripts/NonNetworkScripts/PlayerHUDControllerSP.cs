@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using InControl;
 
 public class PlayerHUDControllerSP : MonoBehaviour {
 
@@ -86,7 +87,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetButtonDown("Pause"))
+        if (InputManager.ActiveDevice.MenuWasPressed)
         {
             print("PAUSE?");
             TogglePause();
@@ -94,7 +95,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
         if (gameOver)
         {
-            if (Input.GetButtonDown("Submit"))
+            if (InputManager.ActiveDevice.MenuWasPressed)
             {
                 //Return to title screen.
                 GameController.instance.LoadNewScene(GameController.MAIN_MENU_INDEX);

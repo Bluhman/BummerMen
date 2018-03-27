@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using InControl;
 
 public class BombSP : MonoBehaviour
 {
@@ -11,8 +12,9 @@ public class BombSP : MonoBehaviour
     public bool powerBomb = false;
     public bool triggerBomb = false;
     public GameObject noiseSource;
-    public string triggerKey = "nope";
 
+    [HideInInspector]
+    public InputDevice playerController;
     [HideInInspector]
     public PlayerSP owner;
     [HideInInspector]
@@ -72,7 +74,7 @@ public class BombSP : MonoBehaviour
         if (triggerBomb)
         {
             //Input detector for trigger bombs.
-            if (Input.GetButtonDown(triggerKey) && !exploded)
+            if (playerController.Action3.WasPressed && !exploded)
             {
                 Explode();
             }
