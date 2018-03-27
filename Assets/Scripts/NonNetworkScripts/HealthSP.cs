@@ -35,11 +35,11 @@ public class HealthSP : MonoBehaviour
 
         looksInvuln = (currentInvulnTime > 0);
 
-        playerColor = GetComponent<Renderer>().material.color;
+        playerColor = GetComponentInChildren<Renderer>().material.color;
         invulnColor = playerColor;
         invulnColor.a = 0.5f;
 
-        GetComponent<Renderer>().material.color = invulnColor;
+        GetComponentInChildren<Renderer>().material.color = invulnColor;
 
         AUDIO = GetComponent<AudioSource>();
 
@@ -60,7 +60,7 @@ public class HealthSP : MonoBehaviour
 
         currentHealth -= amount;
         looksInvuln = true;
-        GetComponent<Renderer>().material.color = invulnColor;
+        GetComponentInChildren<Renderer>().material.color = invulnColor;
         currentInvulnTime = invulnTime;
 
         if (currentHealth <= 0 && !alreadyDead)
@@ -160,7 +160,7 @@ public class HealthSP : MonoBehaviour
             if (currentInvulnTime <= 0)
             {
                 print("I am no longer invuln.");
-                GetComponent<Renderer>().material.color = playerColor;
+                GetComponentInChildren<Renderer>().material.color = playerColor;
                 looksInvuln = false;
             }
         }

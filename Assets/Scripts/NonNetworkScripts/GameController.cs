@@ -44,6 +44,8 @@ public class GameController : MonoBehaviour {
 
     public void PlayMusic(AudioClip song, bool loop = true)
     {
+        if (music.clip == song && music.isPlaying) return;
+
         music.clip = song;
         music.loop = loop;
         music.Play();
@@ -66,6 +68,11 @@ public class GameController : MonoBehaviour {
         {
             SceneManager.LoadScene(sceneIndex);
         }
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
 

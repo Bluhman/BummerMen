@@ -96,7 +96,7 @@ public class PlayerSP : MonoBehaviour {
                 playerColor = Color.green;
                 break;
         }
-        GetComponent<Renderer>().material.color = playerColor;
+        GetComponentInChildren<Renderer>().material.color = playerColor;
 
         resetStats();
         currentLives = lives;
