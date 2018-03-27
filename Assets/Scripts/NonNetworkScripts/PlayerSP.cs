@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using InControl;
 [RequireComponent(typeof(CharacterController))]
 
 public class PlayerSP : MonoBehaviour {
@@ -22,10 +23,13 @@ public class PlayerSP : MonoBehaviour {
     public float gridSize;
 
     public int playerNumber;
+    InputDevice playerController;
+    /*
     public string layBombKey = "Fire1_P1";
     public string triggerKey = "Fire2_P1";
     public string horizAxis = "Horizontal_P1";
     public string vertiAxis = "Vertical_P1";
+    */
 
     AudioSource AUDIO;
     public AudioClip pickUp;
@@ -103,6 +107,10 @@ public class PlayerSP : MonoBehaviour {
         {
             gameObject.SetActive(false);
         }
+        else if (InputManager.Devices.Count >= playerNumber)
+        {
+            playerController = InputManager.Devices[playerNumber - 1];
+        }
     }
 
 	// Use this for initialization
@@ -128,7 +136,7 @@ public class PlayerSP : MonoBehaviour {
         if (Time.timeScale > 0)
         moveWithInput();
 
-        if (Input.GetButtonDown(layBombKey))
+        if (playerController.Action1.WasPressed)
         {
             LayBomb();
         }
@@ -160,10 +168,10 @@ public class PlayerSP : MonoBehaviour {
     {
         BombSP bombScript = bomb.GetComponent<BombSP>();
         bombScript.owner = this;
+        bombScript.playerController = playerController;
         bombScript.power = power;
         bombScript.powerBomb = powerBomb;
         bombScript.triggerBomb = remoteBomb;
-        bombScript.triggerKey = triggerKey;
         bombScript.SwapModel();
     }
 
@@ -175,7 +183,7 @@ public class PlayerSP : MonoBehaviour {
         temp.y = 0.5f;
         transform.position = temp;
 
-        Vector3 plannedMovement = new Vector3(Input.GetAxis(horizAxis), 0, Input.GetAxis(vertiAxis));
+        Vector3 plannedMovement = new Vector3(playerController.LeftStickX, 0, playerController.LeftStickY);
         
         if (plannedMovement.magnitude != 0)
         {
