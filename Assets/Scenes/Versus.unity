@@ -2185,6 +2185,11 @@ Prefab:
       propertyPath: hudForPlayer
       value: 
       objectReference: {fileID: 1959406985}
+    - target: {fileID: 114891964518983350, guid: 53fa3856fafffe044bdc4e73525915f7,
+        type: 2}
+      propertyPath: lives
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 53fa3856fafffe044bdc4e73525915f7, type: 2}
   m_IsPrefabParent: 0
@@ -2344,6 +2349,11 @@ Prefab:
       propertyPath: hudForPlayer
       value: 
       objectReference: {fileID: 1959406985}
+    - target: {fileID: 114891964518983350, guid: 53fa3856fafffe044bdc4e73525915f7,
+        type: 2}
+      propertyPath: lives
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 53fa3856fafffe044bdc4e73525915f7, type: 2}
   m_IsPrefabParent: 0
@@ -6515,6 +6525,11 @@ Prefab:
       propertyPath: hudForPlayer
       value: 
       objectReference: {fileID: 1959406985}
+    - target: {fileID: 114891964518983350, guid: 53fa3856fafffe044bdc4e73525915f7,
+        type: 2}
+      propertyPath: lives
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 53fa3856fafffe044bdc4e73525915f7, type: 2}
   m_IsPrefabParent: 0
@@ -7477,6 +7492,11 @@ Prefab:
       propertyPath: hudForPlayer
       value: 
       objectReference: {fileID: 1959406985}
+    - target: {fileID: 114891964518983350, guid: 53fa3856fafffe044bdc4e73525915f7,
+        type: 2}
+      propertyPath: lives
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 53fa3856fafffe044bdc4e73525915f7, type: 2}
   m_IsPrefabParent: 0

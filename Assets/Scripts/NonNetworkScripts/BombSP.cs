@@ -37,7 +37,7 @@ public class BombSP : MonoBehaviour
     public void SwapModel()
     {   
         //Change the color of the bomb to match that of the owner. Only in versus mode.
-        //if (GameController.instance.versus)
+        if (GameController.instance.versus)
         {
             Material[] mats = model.GetComponent<Renderer>().materials;
             mats[0].color = owner.playerColor; //blindly guessing which one is the color here.

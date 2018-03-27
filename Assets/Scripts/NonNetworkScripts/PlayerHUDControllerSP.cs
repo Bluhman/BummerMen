@@ -59,6 +59,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
             GameObject lifeCounter = Instantiate(lifeCounterTemplate, transform);
             lifeCounters[i] = lifeCounter.GetComponentInChildren<Text>();
+            lifeCounter.GetComponentInChildren<Image>().color = playersSP[i].playerColor;
             if (versus)
             {
                 //Lists life counters vertically.
