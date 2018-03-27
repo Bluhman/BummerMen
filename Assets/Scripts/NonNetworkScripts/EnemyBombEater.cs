@@ -25,7 +25,7 @@ public class EnemyBombEater : EnemyBaseEntity
         RaycastHit hit;
         if (Physics.Raycast(transform.position, lastMoveAngle, out hit, gridSize))
         {
-            if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("bomb"))
+            if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Bomb"))
             {
                 List<Vector3> locations = new List<Vector3>();
                 for (int a = 0; a < 360; a += 90)
@@ -33,7 +33,7 @@ public class EnemyBombEater : EnemyBaseEntity
                     Vector3 positionFacing = new Vector3(Mathf.Cos(Mathf.Deg2Rad * a), 0, Mathf.Sin(Mathf.Deg2Rad * a));
                     if (Physics.Raycast(transform.position, positionFacing, out hit, gridSize))
                     {
-                        if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("bomb"))
+                        if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Bomb"))
                         {
                             //print(hit.transform.name + " at " + positionFacing);
                             continue;
@@ -71,7 +71,7 @@ public class EnemyBombEater : EnemyBaseEntity
                 thingHit.TakeDamage(1);
         }
 
-        if (other.CompareTag("bomb"))
+        if (other.CompareTag("Bomb"))
         {
             //Maybe add an eating sound here?
             Destroy(other.gameObject);
