@@ -64,7 +64,7 @@ public class PlayerSP : MonoBehaviour {
         HSP = GetComponent<HealthSP>();
 
         //set player color:
-        playerColor = Color.cyan;
+        playerColor = Color.white;
         switch (playerNumber)
         {
             case 1:
