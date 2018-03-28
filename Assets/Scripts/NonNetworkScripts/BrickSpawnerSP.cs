@@ -23,6 +23,7 @@ public class BrickSpawnerSP : MonoBehaviour
     public void Start()
     {
         accessibilityGrid = new bool[mapSizeX+1,mapSizeY+1];
+        print("I ran.");
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         int halfMapSizeX = mapSizeX / 2;

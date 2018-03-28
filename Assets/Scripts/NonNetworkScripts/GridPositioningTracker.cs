@@ -19,6 +19,11 @@ public class GridPositioningTracker : MonoBehaviour
     void Start()
     {
         BSSP = FindObjectOfType<BrickSpawnerSP>();
+        if (BSSP == null)
+        {
+            print("No grid to position on was found. Deleting this component.");
+            Destroy(this);
+        }
         SetGridPosition(true);
     }
 

@@ -24,6 +24,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     public bool versus = false;
     int currentWinner;
 
+    public AudioClip winMusic;
+    public AudioClip loseMusic;
 
     public float typeInTime; //time it takes for each letter to be typed into the box.
     float typeInTimer;
@@ -104,6 +106,13 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
         HandleMessages();
 
+        if (timer <= -1)
+        {
+            //no time limit.
+            TimerText.text = "";
+            return;
+        }
+
         if (timer > 0 && !paused)
         {
             timer -= Time.deltaTime;
@@ -119,6 +128,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
             string minSec = string.Format("{0}:{1:00}", (int)timer / 60, (int)timer % 60);
             TimerText.text = minSec;
         }
+        
     }
 	
     public void UpdateLives()
@@ -160,6 +170,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
                 GameOverText.SetActive(true);
                 gameOver = true;
+                GameController.instance.PlayMusic(loseMusic, false);
                 //print("I think everyone is dead.");
             }
 
@@ -175,6 +186,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
             }
             GameOverText.SetActive(true);
             gameOver = true;
+            GameController.instance.PlayMusic(winMusic, false);
             Time.timeScale = 0;
             paused = true;
             //print("I think there is one winner.");
@@ -203,6 +215,11 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
     public void ShowMessage(Message nextMessage)
     {
+        if (nextMessage.overWrite)
+        {
+            messageQueue.Clear();
+            showingMessage = false;
+        }
         messageQueue.Enqueue(nextMessage);
     }
 
@@ -280,12 +297,14 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         public string text;
         public Sprite portrait;
         public float duration;
+        public bool overWrite;
 
-        public Message (string message, Sprite face, float duration)
+        public Message (string message, Sprite face, float duration, bool overWriteOldMessage = false)
         {
             text = message;
             portrait = face;
             this.duration = duration;
+            overWrite = overWriteOldMessage;
         }
     }
 }
