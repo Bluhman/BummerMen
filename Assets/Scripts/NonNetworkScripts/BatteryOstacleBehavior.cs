@@ -52,16 +52,16 @@ public class BatteryOstacleBehavior : MonoBehaviour {
 
         AS.Play();
 
-        print("blap");
+        //print("blap");
         RaycastHit[] hits = Physics.RaycastAll(transform.position, boltDirection, boltDistance);
         for (int i = 0; i < hits.Length; i++)
         {
-            print("ZAPP");
+            //print("ZAPP");
             HealthSP targetHP = hits[i].transform.gameObject.GetComponent<HealthSP>();
             if (targetHP != null)
                 if (targetHP.zappable)
                     targetHP.TakeDamage(1, false);
-            if (hits[i].transform.CompareTag("bomb"))
+            if (hits[i].transform.CompareTag("Bomb"))
             {
                 hits[i].transform.gameObject.GetComponent<BombSP>().Explode();
             }

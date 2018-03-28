@@ -6,6 +6,7 @@ using InControl;
 
 public class PlayerSP : MonoBehaviour {
 
+    public Texture textureSwap;
     public float baseSpeed;
     float speed;
     public float turnSpeed;
@@ -68,21 +69,30 @@ public class PlayerSP : MonoBehaviour {
         character = GetComponent<CharacterController>();
         HSP = GetComponent<HealthSP>();
         animator = GetComponentInChildren<Animator>();
+        bool actuallyChangeColor = true;
 
         //set player color:
         playerColor = Color.white;
+
+        if (textureSwap != null)
+            GetComponentInChildren<Renderer>().material.SetTexture("_MainTex",textureSwap);
+
         switch (playerNumber)
         {
             case 1:
+                actuallyChangeColor = false;
                 break;
 
             case 2:
+                actuallyChangeColor = false;
                 playerColor = Color.black;
                 break;
             case 3:
+                actuallyChangeColor = false;
                 playerColor = Color.red;
                 break;
             case 4:
+                actuallyChangeColor = false;
                 playerColor = Color.blue;
                 break;
             case 5:
@@ -98,7 +108,9 @@ public class PlayerSP : MonoBehaviour {
                 playerColor = Color.green;
                 break;
         }
-        GetComponentInChildren<Renderer>().material.color = playerColor;
+
+        if (actuallyChangeColor)
+            GetComponentInChildren<Renderer>().material.color = playerColor;
 
         resetStats();
         currentLives = lives;
@@ -132,6 +144,11 @@ public class PlayerSP : MonoBehaviour {
             //Uhhhhhhhh play some animation iu ddunno
             //transform.position += new Vector3 (0,70*Time.deltaTime, 0);
             //transform.Rotate(transform.up, 1080 * Time.deltaTime);
+            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
+            {
+                invokedPostDeath();
+            }
+
             return;
         }
 
@@ -323,7 +340,7 @@ public class PlayerSP : MonoBehaviour {
         //Play the death animation
         dead = true;
         animator.SetTrigger("Died");
-        Invoke("invokedPostDeath", 2);
+        //Invoke("invokedPostDeath", 2);
     }
 
     public void invokedPostDeath()
