@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour {
     
     public static GameController instance;
 
-    public static int MAIN_MENU_INDEX = 0;
+    public static int MAIN_MENU_INDEX = 1;
 
     private AudioSource music;
     [HideInInspector]
@@ -58,6 +58,7 @@ public class GameController : MonoBehaviour {
 
     public void LoadNewScene(int sceneIndex)
     {
+        Time.timeScale = 1; //Used in case quitting the game while paused.
         SceneManager.LoadScene(sceneIndex);
     }
 

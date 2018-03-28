@@ -12,6 +12,7 @@ public class HealthSP : MonoBehaviour
     public bool zappable = true; //USED TO MAKE THINGS INVULNERABLE TO THE LIGHTNING!
     public int currentHealth = 1;
     public PlayerHUDControllerSP hudForPlayer;
+    public GameObject invulnEffect;
 
     public float currentInvulnTime;
     public AudioClip dieSound;
@@ -25,21 +26,16 @@ public class HealthSP : MonoBehaviour
     //public GameObject[] dropOnDeath;
     public GenericLootDropTableGameObject dropOnDeath;
 
-    Color playerColor;
-    Color invulnColor;
-
     private void Start()
     {
         if (startInvuln)
             currentInvulnTime = invulnTime;
 
         looksInvuln = (currentInvulnTime > 0);
-
-        playerColor = GetComponentInChildren<Renderer>().material.color;
-        invulnColor = playerColor;
-        invulnColor.a = 0.5f;
-
-        GetComponentInChildren<Renderer>().material.color = invulnColor;
+        if (looksInvuln && invulnEffect != null)
+        {
+            invulnEffect.SetActive(true);
+        }
 
         AUDIO = GetComponent<AudioSource>();
 
@@ -59,9 +55,7 @@ public class HealthSP : MonoBehaviour
         if (currentInvulnTime > 0) return;
 
         currentHealth -= amount;
-        looksInvuln = true;
-        GetComponentInChildren<Renderer>().material.color = invulnColor;
-        currentInvulnTime = invulnTime;
+        
 
         if (currentHealth <= 0 && !alreadyDead)
         {
@@ -104,6 +98,14 @@ public class HealthSP : MonoBehaviour
             {
                 ItemSpawnDestroy();
             }
+        }
+
+        else
+        {
+            looksInvuln = true;
+            if (invulnEffect != null)
+                invulnEffect.SetActive(true);
+            currentInvulnTime = invulnTime;
         }
 
 
@@ -160,7 +162,8 @@ public class HealthSP : MonoBehaviour
             if (currentInvulnTime <= 0)
             {
                 print("I am no longer invuln.");
-                GetComponentInChildren<Renderer>().material.color = playerColor;
+                if (invulnEffect != null)
+                    invulnEffect.SetActive(false);
                 looksInvuln = false;
             }
         }
@@ -169,6 +172,11 @@ public class HealthSP : MonoBehaviour
     public void Respawn()
     {
         print("RESPAWN");
+
+        looksInvuln = true;
+        if (invulnEffect != null)
+            invulnEffect.SetActive(true);
+        currentInvulnTime = invulnTime;
 
         // default our spawn point to the 0 spot.
         Vector3 spawnPoint = new Vector3(0, 0.5f, 0);
