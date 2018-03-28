@@ -61,11 +61,13 @@ public class PlayerSP : MonoBehaviour {
     public Color playerColor;
 
     HealthSP HSP;
+    Animator animator;
 
     void Awake()
     {
         character = GetComponent<CharacterController>();
         HSP = GetComponent<HealthSP>();
+        animator = GetComponentInChildren<Animator>();
 
         //set player color:
         playerColor = Color.white;
@@ -128,8 +130,8 @@ public class PlayerSP : MonoBehaviour {
         if (dead)
         {
             //Uhhhhhhhh play some animation iu ddunno
-            transform.position += new Vector3 (0,70*Time.deltaTime, 0);
-            transform.Rotate(transform.up, 1080 * Time.deltaTime);
+            //transform.position += new Vector3 (0,70*Time.deltaTime, 0);
+            //transform.Rotate(transform.up, 1080 * Time.deltaTime);
             return;
         }
 
@@ -187,6 +189,7 @@ public class PlayerSP : MonoBehaviour {
         float yMovementSum = Mathf.Clamp(playerController.LeftStickY + playerController.DPadY, -1, 1);
 
         Vector3 plannedMovement = new Vector3(xMovementSum, 0, yMovementSum);
+        animator.SetFloat("MovementSpeed", plannedMovement.magnitude);
         
         if (plannedMovement.magnitude != 0)
         {
@@ -319,11 +322,13 @@ public class PlayerSP : MonoBehaviour {
     {
         //Play the death animation
         dead = true;
-        Invoke("invokedPostDeath", 1);
+        animator.SetTrigger("Died");
+        Invoke("invokedPostDeath", 2);
     }
 
     public void invokedPostDeath()
     {
+        animator.ResetTrigger("Died");
         resetStats();
         if (currentLives > 0)
             HSP.Respawn();
