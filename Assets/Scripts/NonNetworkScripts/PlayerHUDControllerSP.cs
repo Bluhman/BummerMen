@@ -116,7 +116,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
             return;
         }
 
-        if (InputManager.ActiveDevice.MenuWasPressed)
+        if (InputManager.ActiveDevice.MenuWasPressed && !versus)
         {
             print("PAUSE?");
             TogglePause();
