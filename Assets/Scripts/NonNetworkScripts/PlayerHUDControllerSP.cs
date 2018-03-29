@@ -180,34 +180,32 @@ public class PlayerHUDControllerSP : MonoBehaviour {
                 if (!allDead)
                 {
                     oneRemains = false;
-                    //print("there is more than one remaining.");
+                    print("there is more than one remaining.");
                 }
                 allDead = false;
                 currentWinner = i + 1;
-                //print("not all are dead.");
+                print("not all are dead.");
             }
+        }
 
-            if (allDead)
+        if (allDead)
+        {
+            if (versus)
             {
-                if (versus)
-                {
-                    Text theText = GameOverText.GetComponent<Text>();
-                    GameController.instance.PlayMusic(loseMusic, false);
-                    if (theText != null)
-                    {
-                        theText.text = "DRAW";
-                    }
-                    Time.timeScale = 0;
-                    paused = true;
-                }
-
-                GameOverText.SetActive(true);
-                gameOver = true;
+                Text theText = GameOverText.GetComponent<Text>();
                 GameController.instance.PlayMusic(loseMusic, false);
-                //print("I think everyone is dead.");
+                if (theText != null)
+                {
+                    theText.text = "DRAW";
+                }
+                Time.timeScale = 0;
+                paused = true;
             }
 
-            
+            GameOverText.SetActive(true);
+            gameOver = true;
+            GameController.instance.PlayMusic(loseMusic, false);
+            print("I think everyone is dead.");
         }
 
         if (!allDead && oneRemains && versus)

@@ -6,6 +6,8 @@ using InControl;
 
 public class PlayerSP : MonoBehaviour {
 
+    static bool testingVERSUS = false; //make sure to set this to false once the game's ready to actually be played.
+
     public Texture textureSwap;
     public float baseSpeed;
     float speed;
@@ -117,7 +119,7 @@ public class PlayerSP : MonoBehaviour {
 
         //special check: depending on the gamecontroller's player number, we might not want to spawn players.
         //The one exception is player 1 themselves.
-        if ((playerNumber > 1 || GameController.instance.versus) && !GameController.instance.players[playerNumber-1])
+        if ((playerNumber > 1 || GameController.instance.versus) && !GameController.instance.players[playerNumber-1] && !PlayerSP.testingVERSUS)
         {
             gameObject.SetActive(false);
         }
@@ -144,13 +146,15 @@ public class PlayerSP : MonoBehaviour {
             //Uhhhhhhhh play some animation iu ddunno
             //transform.position += new Vector3 (0,70*Time.deltaTime, 0);
             //transform.Rotate(transform.up, 1080 * Time.deltaTime);
-            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
+            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1 && animator.GetCurrentAnimatorStateInfo(0).IsName("DEAD"))
             {
                 invokedPostDeath();
             }
 
             return;
         }
+
+        if (playerController == null) return;
 
         if (Time.timeScale > 0)
         moveWithInput();
