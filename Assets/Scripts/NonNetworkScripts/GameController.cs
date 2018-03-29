@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour {
 
     private AudioSource music;
     [HideInInspector]
-    public int players;
+    public bool[] players;
     [HideInInspector]
     public bool versus;
 
@@ -39,7 +39,8 @@ public class GameController : MonoBehaviour {
 
         //And then we get references to the components of the GameController that we need.
         instance.music = instance.GetComponent<AudioSource>();
-        players = 0;
+        players = new bool[8];
+        ResetPlayercount();
     }
 
     public void PlayMusic(AudioClip song, bool loop = true)
@@ -62,18 +63,17 @@ public class GameController : MonoBehaviour {
         SceneManager.LoadScene(sceneIndex);
     }
 
-    public void LoadNewSceneVersus(int sceneIndex)
-    {
-        //This version of the scene loader only works if there's more than one player.
-        if (players >= 2)
-        {
-            SceneManager.LoadScene(sceneIndex);
-        }
-    }
-
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void ResetPlayercount()
+    {
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i] = false;
+        }
     }
 
 

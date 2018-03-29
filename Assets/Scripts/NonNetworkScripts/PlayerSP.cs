@@ -117,7 +117,7 @@ public class PlayerSP : MonoBehaviour {
 
         //special check: depending on the gamecontroller's player number, we might not want to spawn players.
         //The one exception is player 1 themselves.
-        if (playerNumber > 1 && playerNumber > GameController.instance.players)
+        if ((playerNumber > 1 || GameController.instance.versus) && !GameController.instance.players[playerNumber-1])
         {
             gameObject.SetActive(false);
         }

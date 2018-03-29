@@ -9,6 +9,7 @@ public class VersusPlayerSlotUI : MonoBehaviour {
     public int playerNumber;
     public Text statusTag;
     public Text nameTag;
+    public VersusMenuPlayerCounter VMPC;
     bool ready;
     /*
     public string playerStartButton = "Start_P1";
@@ -36,7 +37,8 @@ public class VersusPlayerSlotUI : MonoBehaviour {
                 ready = true;
                 statusTag.text = "READY!";
                 myImage.color = playerColor;
-                GameController.instance.players++;
+                GameController.instance.players[playerNumber-1] = true;
+                VMPC.ChangePlayercount(1);
             }
 
             if (InputManager.Devices[playerNumber-1].Action2 && ready)
@@ -44,7 +46,8 @@ public class VersusPlayerSlotUI : MonoBehaviour {
                 ready = false;
                 statusTag.text = "Press Start to Join";
                 myImage.color = baseColor;
-                GameController.instance.players--;
+                GameController.instance.players[playerNumber - 1] = false;
+                VMPC.ChangePlayercount(-1);
             }
         }
 	}
