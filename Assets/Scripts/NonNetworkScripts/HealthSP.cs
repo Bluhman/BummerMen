@@ -9,6 +9,7 @@ public class HealthSP : MonoBehaviour
     public float invulnTime = 3.0f;
     public bool startInvuln = true;
     public bool isAPlayer = true;
+    public bool isAnEnemy = false;
     public bool zappable = true; //USED TO MAKE THINGS INVULNERABLE TO THE LIGHTNING!
     public int currentHealth = 1;
     public PlayerHUDControllerSP hudForPlayer;
@@ -97,6 +98,12 @@ public class HealthSP : MonoBehaviour
             else if (canGenerateDrop)
             {
                 ItemSpawnDestroy();
+            }
+
+
+            if (isAnEnemy)
+            {
+                hudForPlayer.AddOrRemoveEnemy(-1);
             }
         }
 

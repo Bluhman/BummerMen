@@ -8,6 +8,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
     public PlayerSP[] playersSP;
     public GameObject GameOverText;
+    public GameObject WinText;
     public GameObject lifeCounterTemplate;
     Text[] lifeCounters;
     public float counterSpacing;
@@ -23,9 +24,11 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     bool gameOver;
     public bool versus = false;
     int currentWinner;
+    public int enemiesAlive;
 
     public AudioClip winMusic;
     public AudioClip loseMusic;
+    public int nextLevel;
 
     public float typeInTime; //time it takes for each letter to be typed into the box.
     float typeInTimer;
@@ -50,6 +53,9 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         GameOverText.SetActive(false);
         pauseMenu.SetActive(false);
         gameOver = false;
+        WinText.SetActive(false);
+        enemiesAlive = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        print("map has " + enemiesAlive + " enemies");
         
         timer = timeLimit;
         currentMessage = new Message("", null, 0);
@@ -89,19 +95,28 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
     void Update()
     {
-        if (InputManager.ActiveDevice.MenuWasPressed)
-        {
-            print("PAUSE?");
-            TogglePause();
-        }
+        
 
         if (gameOver)
         {
-            if (InputManager.ActiveDevice.MenuWasPressed)
+            if (InputManager.ActiveDevice.MenuWasPressed && GameOverText.activeInHierarchy)
             {
                 //Return to title screen.
                 GameController.instance.LoadNewScene(GameController.MAIN_MENU_INDEX);
             }
+
+            if (InputManager.ActiveDevice.MenuWasPressed && WinText.activeInHierarchy)
+            {
+                //Move to next level
+                GameController.instance.LoadNewScene(nextLevel);
+            }
+            return;
+        }
+
+        if (InputManager.ActiveDevice.MenuWasPressed)
+        {
+            print("PAUSE?");
+            TogglePause();
         }
 
         HandleMessages();
@@ -131,6 +146,20 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         
     }
 	
+    public void AddOrRemoveEnemy(int value)
+    {
+        enemiesAlive += value;
+
+        if (enemiesAlive <= 0)
+        {
+            //WE WIN.
+            gameOver = true;
+            GameController.instance.PlayMusic(winMusic, false);
+            WinText.SetActive(true);
+            Time.timeScale = 0;
+        }
+    }
+
     public void UpdateLives()
     {
         print("UPDATELIVES");
@@ -160,6 +189,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
                 if (versus)
                 {
                     Text theText = GameOverText.GetComponent<Text>();
+                    GameController.instance.PlayMusic(loseMusic, false);
                     if (theText != null)
                     {
                         theText.text = "DRAW";
