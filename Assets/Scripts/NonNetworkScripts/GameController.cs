@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour {
     public static GameController instance;
 
     public static int MAIN_MENU_INDEX = 1;
+    public static int VERSUS_MENU_INDEX = 2;
 
     private AudioSource music;
     [HideInInspector]

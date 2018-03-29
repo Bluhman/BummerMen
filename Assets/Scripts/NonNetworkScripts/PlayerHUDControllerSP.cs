@@ -102,7 +102,10 @@ public class PlayerHUDControllerSP : MonoBehaviour {
             if (InputManager.ActiveDevice.MenuWasPressed && GameOverText.activeInHierarchy)
             {
                 //Return to title screen.
-                GameController.instance.LoadNewScene(GameController.MAIN_MENU_INDEX);
+                if (versus)
+                    GameController.instance.LoadNewScene(GameController.VERSUS_MENU_INDEX);
+                else
+                    GameController.instance.LoadNewScene(GameController.MAIN_MENU_INDEX);
             }
 
             if (InputManager.ActiveDevice.MenuWasPressed && WinText.activeInHierarchy)
