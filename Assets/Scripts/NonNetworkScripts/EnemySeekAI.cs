@@ -48,9 +48,13 @@ public class EnemySeekAI : EnemyBaseEntity
         {
             
             Vector3 positionFacing = new Vector3(Mathf.Cos(Mathf.Deg2Rad * a), 0, Mathf.Sin(Mathf.Deg2Rad * a));
-            if (Physics.Raycast(transform.position, positionFacing, out hit, gridSize))
+
+            float customGridSize = gridSize;
+            if (a % 90 != 0) customGridSize *= Mathf.Sqrt(2);
+
+            if (Physics.Raycast(transform.position, positionFacing, out hit, customGridSize))
             {
-                if (!hit.collider.CompareTag("Player"))
+                if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Explosion"))
                 {
                     //print(hit.transform.name + " at " + positionFacing);
                     continue;

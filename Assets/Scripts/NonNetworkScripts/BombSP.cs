@@ -13,6 +13,10 @@ public class BombSP : MonoBehaviour
     public bool triggerBomb = false;
     public GameObject noiseSource;
 
+    public GameObject defaultBombModel;
+    public GameObject remoteModel;
+    public GameObject megaBombModel;
+
     [HideInInspector]
     public InputDevice playerController;
     [HideInInspector]
@@ -39,12 +43,7 @@ public class BombSP : MonoBehaviour
     public void SwapModel()
     {   
         //Change the color of the bomb to match that of the owner. Only in versus mode.
-        if (GameController.instance.versus)
-        {
-            Material[] mats = model.GetComponent<Renderer>().materials;
-            mats[0].color = owner.playerColor; //blindly guessing which one is the color here.
-            model.GetComponent<Renderer>().materials = mats;
-        }
+        
         
         //This script will swap the model used by the bomb depending on what bomb type it is (trigger, power, etc). todo: ask allen and the folks to make alternate models lol like that's happening.
         if (powerBomb)
@@ -53,15 +52,31 @@ public class BombSP : MonoBehaviour
             //Material theMaterial = model.GetComponent<Renderer>().material;
             //theMaterial.color = new Color(1, 0.4f, 0.4f, 1);
 
+            model = Instantiate(megaBombModel, transform);
+
             bombPulseMagnitude *= 2; //power bombs pulse a LOT.
         }
-        if (triggerBomb)
+        else if (triggerBomb)
         {
             //Just recolor for now.
             //Material theMaterial = model.GetComponent<Renderer>().material;
             //theMaterial.color = new Color(0.4f, 1, 1, 1);
 
+            model = Instantiate(remoteModel, transform);
+            bombLocalScale = 0.4f;
+
             bombPulseMagnitude = 0f; //Trigger bombs don't pulse.
+        }
+        else
+        {
+            model = Instantiate(defaultBombModel, transform);
+        }
+
+        if (GameController.instance.versus)
+        {
+            Material[] mats = model.GetComponent<Renderer>().materials;
+            mats[0].color = owner.playerColor; //blindly guessing which one is the color here.
+            model.GetComponent<Renderer>().materials = mats;
         }
     }
 
