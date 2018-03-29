@@ -24,7 +24,8 @@ public class VersusPlayerSlotUI : MonoBehaviour {
         nameTag.text = "Player " + playerNumber;
         myImage = GetComponent<Image>();
         baseColor = myImage.color;
-	}
+        GameController.instance.players[playerNumber - 1] = false;
+    }
 	
 	// Update is called once per frame
 	void Update () {
