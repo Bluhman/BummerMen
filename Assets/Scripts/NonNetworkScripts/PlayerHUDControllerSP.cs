@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using InControl;
 
 public class PlayerHUDControllerSP : MonoBehaviour {
 
-    public PlayerSP playerSP;
+    public PlayerSP[] playersSP;
     public GameObject GameOverText;
-    public Text LifeCounterText;
+    public GameObject WinText;
+    public GameObject lifeCounterTemplate;
+    Text[] lifeCounters;
+    public float counterSpacing;
     public Text TimerText;
     public GameObject pauseMenu;
     public Image dialogBox;
@@ -17,7 +21,14 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     float timer;
     [HideInInspector]
     public bool paused = false;
+    bool gameOver;
+    public bool versus = false;
+    int currentWinner;
+    public int enemiesAlive;
 
+    public AudioClip winMusic;
+    public AudioClip loseMusic;
+    public int nextLevel;
 
     public float typeInTime; //time it takes for each letter to be typed into the box.
     float typeInTimer;
@@ -41,19 +52,71 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         messageQueue = new Queue<Message>();
         GameOverText.SetActive(false);
         pauseMenu.SetActive(false);
-        UpdateLives();
+        gameOver = false;
+        WinText.SetActive(false);
+        enemiesAlive = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        print("map has " + enemiesAlive + " enemies");
+        
         timer = timeLimit;
         currentMessage = new Message("", null, 0);
 
+        lifeCounters = new Text[playersSP.Length];
+
+        for (int i = 0; i < playersSP.Length; i++)
+        {
+            if (!playersSP[i].isActiveAndEnabled) continue;
+
+            GameObject lifeCounter = Instantiate(lifeCounterTemplate, transform);
+            lifeCounters[i] = lifeCounter.GetComponentInChildren<Text>();
+            lifeCounter.GetComponentInChildren<Image>().color = playersSP[i].playerColor;
+            if (versus)
+            {
+                //Lists life counters vertically.
+                lifeCounter.transform.position = new Vector2(lifeCounter.transform.position.x , lifeCounter.transform.position.y - counterSpacing * i);
+                if (i > 0)
+                    TimerText.transform.position -= new Vector3(0 , counterSpacing);
+            }
+            else
+            {
+                //Lists life counters horizontally.
+                lifeCounter.transform.position = new Vector2(lifeCounter.transform.position.x + counterSpacing * i, lifeCounter.transform.position.y);
+            }
+            //print(lifeCounter.transform.position);
+        }
+        UpdateLives();
+
+        GameController.instance.versus = this.versus;
+
         //Testing message display functions.
-        ShowMessage(new Message("This is a test message", null, 3));
-        ShowMessage(new Message("Isn't that neat?", null, 3));
-        ShowMessage(new Message("I can also change my face!", testSprite, 5));
+        //ShowMessage(new Message("This is a test message", null, 3));
+        //ShowMessage(new Message("Isn't that neat?", null, 3));
+        //ShowMessage(new Message("I can also change my face!", testSprite, 5));
     }
 
     void Update()
     {
-        if (Input.GetButtonDown("Pause"))
+        
+
+        if (gameOver)
+        {
+            if (InputManager.ActiveDevice.MenuWasPressed && GameOverText.activeInHierarchy)
+            {
+                //Return to title screen.
+                if (versus)
+                    GameController.instance.LoadNewScene(GameController.VERSUS_MENU_INDEX);
+                else
+                    GameController.instance.LoadNewScene(GameController.MAIN_MENU_INDEX);
+            }
+
+            if (InputManager.ActiveDevice.MenuWasPressed && WinText.activeInHierarchy)
+            {
+                //Move to next level
+                GameController.instance.LoadNewScene(nextLevel);
+            }
+            return;
+        }
+
+        if (InputManager.ActiveDevice.MenuWasPressed && !versus)
         {
             print("PAUSE?");
             TogglePause();
@@ -61,13 +124,21 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
         HandleMessages();
 
+        if (timer <= -1)
+        {
+            //no time limit.
+            TimerText.text = "";
+            return;
+        }
+
         if (timer > 0 && !paused)
         {
             timer -= Time.deltaTime;
             if (timer < 0)
             {
                 timer = 0;
-                playerSP.currentLives = 0;
+                for (int i = 0; i < playersSP.Length; i++)
+                    playersSP[i].currentLives = 0;
                 UpdateLives();
                 Time.timeScale = 0;
                 paused = true;
@@ -75,15 +146,81 @@ public class PlayerHUDControllerSP : MonoBehaviour {
             string minSec = string.Format("{0}:{1:00}", (int)timer / 60, (int)timer % 60);
             TimerText.text = minSec;
         }
+        
     }
 	
+    public void AddOrRemoveEnemy(int value)
+    {
+        enemiesAlive += value;
+
+        if (enemiesAlive <= 0)
+        {
+            //WE WIN.
+            gameOver = true;
+            GameController.instance.PlayMusic(winMusic, false);
+            WinText.SetActive(true);
+            Time.timeScale = 0;
+        }
+    }
+
     public void UpdateLives()
     {
-        LifeCounterText.text = " x " +playerSP.currentLives;
+        print("UPDATELIVES");
 
-        if (playerSP.currentLives <= 0)
+        bool allDead = true;
+        bool oneRemains = true;
+
+        for (int i = 0; i < lifeCounters.Length; i++)
         {
+            if (!playersSP[i].isActiveAndEnabled) continue;
+
+            lifeCounters[i].text = " x " + playersSP[i].currentLives;
+            if (playersSP[i].currentLives > 0)
+            {
+                if (!allDead)
+                {
+                    oneRemains = false;
+                    print("there is more than one remaining.");
+                }
+                allDead = false;
+                currentWinner = i + 1;
+                print("not all are dead.");
+            }
+        }
+
+        if (allDead)
+        {
+            if (versus)
+            {
+                Text theText = GameOverText.GetComponent<Text>();
+                GameController.instance.PlayMusic(loseMusic, false);
+                if (theText != null)
+                {
+                    theText.text = "DRAW";
+                }
+                Time.timeScale = 0;
+                paused = true;
+            }
+
             GameOverText.SetActive(true);
+            gameOver = true;
+            GameController.instance.PlayMusic(loseMusic, false);
+            print("I think everyone is dead.");
+        }
+
+        if (!allDead && oneRemains && versus)
+        {
+            Text theText = GameOverText.GetComponent<Text>();
+            if (theText != null)
+            {
+                theText.text = "Player " + currentWinner + " wins!";
+            }
+            GameOverText.SetActive(true);
+            gameOver = true;
+            GameController.instance.PlayMusic(winMusic, false);
+            Time.timeScale = 0;
+            paused = true;
+            //print("I think there is one winner.");
         }
     }
 
@@ -109,6 +246,11 @@ public class PlayerHUDControllerSP : MonoBehaviour {
 
     public void ShowMessage(Message nextMessage)
     {
+        if (nextMessage.overWrite)
+        {
+            messageQueue.Clear();
+            showingMessage = false;
+        }
         messageQueue.Enqueue(nextMessage);
     }
 
@@ -186,12 +328,14 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         public string text;
         public Sprite portrait;
         public float duration;
+        public bool overWrite;
 
-        public Message (string message, Sprite face, float duration)
+        public Message (string message, Sprite face, float duration, bool overWriteOldMessage = false)
         {
             text = message;
             portrait = face;
             this.duration = duration;
+            overWrite = overWriteOldMessage;
         }
     }
 }

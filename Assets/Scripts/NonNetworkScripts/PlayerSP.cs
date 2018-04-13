@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using InControl;
 [RequireComponent(typeof(CharacterController))]
 
 public class PlayerSP : MonoBehaviour {
 
+    static bool testingVERSUS = false; //make sure to set this to false once the game's ready to actually be played.
+
+    public Texture textureSwap;
     public float baseSpeed;
     float speed;
     public float turnSpeed;
@@ -13,9 +17,22 @@ public class PlayerSP : MonoBehaviour {
     public float speedPowerUpStep;
     int xGridPos;
     int yGridPos;
+    public Vector2 gridPos
+    {
+        get { return new Vector2(xGridPos, yGridPos); }
+    }
+
     public GameObject bombPrefab;
     public float gridSize;
-    public KeyCode layBombKey;
+
+    public int playerNumber;
+    InputDevice playerController;
+    /*
+    public string layBombKey = "Fire1_P1";
+    public string triggerKey = "Fire2_P1";
+    public string horizAxis = "Horizontal_P1";
+    public string vertiAxis = "Vertical_P1";
+    */
 
     AudioSource AUDIO;
     public AudioClip pickUp;
@@ -26,6 +43,9 @@ public class PlayerSP : MonoBehaviour {
     public int basePower = 3;
     int power;
 
+    public bool powerBomb;
+    public bool remoteBomb;
+
     public int maxBombs = 6;
     public int maxPower = 12;
 
@@ -33,19 +53,80 @@ public class PlayerSP : MonoBehaviour {
     [HideInInspector]
     public int currentLives;
 
-    int playerNumber = -1;
-
     CharacterController character;
     private CollisionFlags charCollisionFlags;
 
     [HideInInspector]
     public bool controllable = true;
+    [HideInInspector]
+    public bool dead = false;
+    [HideInInspector]
+    public Color playerColor;
+
+    HealthSP HSP;
+    Animator animator;
 
     void Awake()
     {
         character = GetComponent<CharacterController>();
+        HSP = GetComponent<HealthSP>();
+        animator = GetComponentInChildren<Animator>();
+        bool actuallyChangeColor = true;
+
+        //set player color:
+        playerColor = Color.white;
+
+        if (textureSwap != null)
+            GetComponentInChildren<Renderer>().material.SetTexture("_MainTex",textureSwap);
+
+        switch (playerNumber)
+        {
+            case 1:
+                actuallyChangeColor = false;
+                break;
+
+            case 2:
+                actuallyChangeColor = false;
+                playerColor = Color.black;
+                break;
+            case 3:
+                actuallyChangeColor = false;
+                playerColor = Color.red;
+                break;
+            case 4:
+                actuallyChangeColor = false;
+                playerColor = Color.blue;
+                break;
+            case 5:
+                playerColor = Color.yellow;
+                break;
+            case 6:
+                playerColor = Color.magenta;
+                break;
+            case 7:
+                playerColor = Color.cyan;
+                break;
+            case 8:
+                playerColor = Color.green;
+                break;
+        }
+
+        if (actuallyChangeColor)
+            GetComponentInChildren<Renderer>().material.color = playerColor;
+
         resetStats();
         currentLives = lives;
+
+        //special check: depending on the gamecontroller's player number, we might not want to spawn players.
+        //The one exception is player 1 themselves.
+        if ((playerNumber > 1 || GameController.instance.versus) && !GameController.instance.players[playerNumber-1] && !PlayerSP.testingVERSUS)
+        {
+            gameObject.SetActive(false);
+        }
+        else if (InputManager.Devices.Count >= playerNumber)
+        {
+            playerController = InputManager.Devices[playerNumber - 1];
+        }
     }
 
 	// Use this for initialization
@@ -60,10 +141,25 @@ public class PlayerSP : MonoBehaviour {
 
         if (lives <= 0) return;
 
+        if (dead)
+        {
+            //Uhhhhhhhh play some animation iu ddunno
+            //transform.position += new Vector3 (0,70*Time.deltaTime, 0);
+            //transform.Rotate(transform.up, 1080 * Time.deltaTime);
+            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1 && animator.GetCurrentAnimatorStateInfo(0).IsName("DEAD"))
+            {
+                invokedPostDeath();
+            }
+
+            return;
+        }
+
+        if (playerController == null) return;
+
         if (Time.timeScale > 0)
         moveWithInput();
 
-        if (Input.GetKeyDown(layBombKey))
+        if (playerController.Action1.WasPressed)
         {
             LayBomb();
         }
@@ -95,13 +191,26 @@ public class PlayerSP : MonoBehaviour {
     {
         BombSP bombScript = bomb.GetComponent<BombSP>();
         bombScript.owner = this;
+        bombScript.playerController = playerController;
         bombScript.power = power;
+        bombScript.powerBomb = powerBomb;
+        bombScript.triggerBomb = remoteBomb;
+        bombScript.SwapModel();
     }
 
     //Takes input to move the player.
     void moveWithInput()
     {
-        Vector3 plannedMovement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        //REALLY MAKE SURE THE Y POSITION REMAINS LOCKED
+        Vector3 temp = transform.position;
+        temp.y = 0.5f;
+        transform.position = temp;
+
+        float xMovementSum = Mathf.Clamp(playerController.LeftStickX + playerController.DPadX, -1, 1);
+        float yMovementSum = Mathf.Clamp(playerController.LeftStickY + playerController.DPadY, -1, 1);
+
+        Vector3 plannedMovement = new Vector3(xMovementSum, 0, yMovementSum);
+        animator.SetFloat("MovementSpeed", plannedMovement.magnitude);
         
         if (plannedMovement.magnitude != 0)
         {
@@ -172,6 +281,8 @@ public class PlayerSP : MonoBehaviour {
     //Method called when the player picks up a PowerUp. This matches up the number of the powerup to an effect.
      public void applyPowerup(int type)
     {
+        AUDIO.pitch = 1f;
+        AUDIO.timeSamples = 0;
         AUDIO.clip = pickUp;
         AUDIO.Play();
 
@@ -194,12 +305,57 @@ public class PlayerSP : MonoBehaviour {
                 break;
             case 3:
                 //Slow down.
+                AUDIO.pitch = -0.5f;
+                AUDIO.timeSamples = AUDIO.clip.samples -1;
+                AUDIO.Play();
                 speed -= speedPowerUpStep;
                 speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+                break;
+            case 4:
+                //POWER BOMB!
+                powerBomb = true;
+                remoteBomb = false;//If we want to make these exclusive. I think it's a good idea.
+                break;
+            case 5:
+                //REMOTE BOMB!
+                remoteBomb = true;
+                powerBomb = false;
+                break;
+            case 6:
+                //Curse! Resets your power.
+                AUDIO.pitch = -1f;
+                AUDIO.timeSamples = AUDIO.clip.samples -1;
+                AUDIO.Play();
+                resetStats();
+                HSP.currentHealth = 1;
+                break;
+            case 7:
+                //Don't worry my friends! I am your shield!
+                HSP.HealUp(1);
                 break;
             default:
                 //Do nothing because it's not a valid powerup.
                 return;
+        }
+    }
+
+    public void DIE()
+    {
+        //Play the death animation
+        dead = true;
+        animator.SetTrigger("Died");
+        //Invoke("invokedPostDeath", 2);
+    }
+
+    public void invokedPostDeath()
+    {
+        animator.ResetTrigger("Died");
+        resetStats();
+        if (currentLives > 0)
+            HSP.Respawn();
+        else
+        {
+            gameObject.SetActive(false);
         }
     }
 
@@ -209,6 +365,8 @@ public class PlayerSP : MonoBehaviour {
         speed = baseSpeed;
         bombs = baseBombs;
         power = basePower;
+        powerBomb = remoteBomb = false;
+        dead = false;
     }
 
 }

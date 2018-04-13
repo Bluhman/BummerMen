@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using InControl;
 
 public class BombSP : MonoBehaviour
 {
@@ -8,8 +9,16 @@ public class BombSP : MonoBehaviour
     public GameObject explosion;
     public LayerMask levelMask;
     private bool exploded = false;
+    public bool powerBomb = false;
+    public bool triggerBomb = false;
     public GameObject noiseSource;
 
+    public GameObject defaultBombModel;
+    public GameObject remoteModel;
+    public GameObject megaBombModel;
+
+    [HideInInspector]
+    public InputDevice playerController;
     [HideInInspector]
     public PlayerSP owner;
     [HideInInspector]
@@ -27,7 +36,48 @@ public class BombSP : MonoBehaviour
     void Start()
     {
         bombPulsePeriod = 0f;
-        Invoke("Explode", explosionTime);
+        if (!triggerBomb)
+            Invoke("Explode", explosionTime);
+    }
+
+    public void SwapModel()
+    {   
+        //Change the color of the bomb to match that of the owner. Only in versus mode.
+        
+        
+        //This script will swap the model used by the bomb depending on what bomb type it is (trigger, power, etc). todo: ask allen and the folks to make alternate models lol like that's happening.
+        if (powerBomb)
+        {
+            //Just recolor for now.
+            //Material theMaterial = model.GetComponent<Renderer>().material;
+            //theMaterial.color = new Color(1, 0.4f, 0.4f, 1);
+
+            model = Instantiate(megaBombModel, transform);
+
+            bombPulseMagnitude *= 2; //power bombs pulse a LOT.
+        }
+        else if (triggerBomb)
+        {
+            //Just recolor for now.
+            //Material theMaterial = model.GetComponent<Renderer>().material;
+            //theMaterial.color = new Color(0.4f, 1, 1, 1);
+
+            model = Instantiate(remoteModel, transform);
+            bombLocalScale = 0.4f;
+
+            bombPulseMagnitude = 0f; //Trigger bombs don't pulse.
+        }
+        else
+        {
+            model = Instantiate(defaultBombModel, transform);
+        }
+
+        if (GameController.instance.versus)
+        {
+            Material[] mats = model.GetComponent<Renderer>().materials;
+            mats[0].color = owner.playerColor; //blindly guessing which one is the color here.
+            model.GetComponent<Renderer>().materials = mats;
+        }
     }
 
     private void Update()
@@ -35,9 +85,18 @@ public class BombSP : MonoBehaviour
         bombPulsePeriod += Time.deltaTime;
         float currentSize = bombLocalScale + bombPulseMagnitude * Mathf.Sin(bombPulseSpeed * bombPulsePeriod);
         model.transform.localScale = new Vector3(currentSize, currentSize, currentSize);
+
+        if (triggerBomb)
+        {
+            //Input detector for trigger bombs.
+            if (playerController.Action3.WasPressed && !exploded)
+            {
+                Explode();
+            }
+        }
     }
 
-    void Explode()
+    public void Explode()
     {
         GameObject.Instantiate(noiseSource);
 
@@ -94,7 +153,7 @@ public class BombSP : MonoBehaviour
                 }
             }
 
-            if (!barrierBlocking)
+            if (!barrierBlocking || powerBomb)
             {
                 print("No diagonal from " + diagonalAngle);
                 
@@ -124,7 +183,6 @@ public class BombSP : MonoBehaviour
 
         model.SetActive(false);
         Destroy(gameObject, .3f);
-        owner.currentBombs--;
     }
 
     private void CreateExplosions(Vector3 direction)
@@ -135,7 +193,7 @@ public class BombSP : MonoBehaviour
             RaycastHit hit;
             Physics.Raycast(transform.position + new Vector3(0, .5f, 0), direction, out hit, i, levelMask);
 
-            if (!hit.collider)
+            if (!hit.collider || powerBomb)
             {
                 //GameObject expl =Instantiate(explosion, transform.position + (i * direction),
                 //  explosion.transform.rotation);
@@ -149,7 +207,7 @@ public class BombSP : MonoBehaviour
             }
             else
             {
-                if (hit.collider.GetComponent<Health>() != null)
+                if (hit.collider.GetComponent<HealthSP>() != null)
                 {
                     //  GameObject expl = Instantiate(explosion, transform.position + (i * direction),
                     //explosion.transform.rotation);
@@ -178,6 +236,12 @@ public class BombSP : MonoBehaviour
             //Explode();
             Invoke("Explode", hitExplosionDelay);
         }
+    }
+
+    void OnDestroy()
+    {
+        //print("Script was destroyed");
+        owner.currentBombs--;
     }
 
 }

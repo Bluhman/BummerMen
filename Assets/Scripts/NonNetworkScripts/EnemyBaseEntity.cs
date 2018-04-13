@@ -11,12 +11,18 @@ public class EnemyBaseEntity : MonoBehaviour {
     public float turnSpeed;
     int xGridPos;
     int yGridPos;
+    public Vector2 gridPos
+    {
+        get { return new Vector2(xGridPos, yGridPos); }
+    }
     public float gridSize;
-    Vector3 currentLocation;
+    [HideInInspector]
+    public Vector3 currentLocation;
     [HideInInspector]
     public Vector3 nextLocation;
     float movePercentage;
-    bool dead = false;
+    [HideInInspector]
+    public bool dead = false;
 
     void Awake()
     {
@@ -29,11 +35,12 @@ public class EnemyBaseEntity : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
     }
 	
 	// Update is called once per frame
 	void Update () {
+
+        setGridPositionFromRealPos();
 
         if (dead)
         {
@@ -65,6 +72,8 @@ public class EnemyBaseEntity : MonoBehaviour {
         }
 	}
 
+
+
     //Navigation logic for the enemy is put here. Optimally you'd sub out the contents of this function to make for some strategy.
     //For now this just picks one of four random cardinal directions to move in.
     public virtual void FindNextLocation()
@@ -76,7 +85,7 @@ public class EnemyBaseEntity : MonoBehaviour {
             Vector3 positionFacing = new Vector3(Mathf.Cos(Mathf.Deg2Rad * a), 0, Mathf.Sin(Mathf.Deg2Rad * a));
             if (Physics.Raycast(transform.position, positionFacing, out hit, gridSize))
             {
-                if (!hit.collider.CompareTag("Player"))
+                if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Explosion"))
                 {
                     //print(hit.transform.name + " at " + positionFacing);
                     continue;

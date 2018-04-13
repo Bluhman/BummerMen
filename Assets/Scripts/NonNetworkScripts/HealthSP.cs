@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class HealthSP : MonoBehaviour
 {
@@ -10,8 +9,11 @@ public class HealthSP : MonoBehaviour
     public float invulnTime = 3.0f;
     public bool startInvuln = true;
     public bool isAPlayer = true;
+    public bool isAnEnemy = false;
+    public bool zappable = true; //USED TO MAKE THINGS INVULNERABLE TO THE LIGHTNING!
     public int currentHealth = 1;
     public PlayerHUDControllerSP hudForPlayer;
+    public GameObject invulnEffect;
 
     public float currentInvulnTime;
     public AudioClip dieSound;
@@ -20,14 +22,10 @@ public class HealthSP : MonoBehaviour
     bool looksInvuln;
     bool alreadyDead;
 
-    private NetworkStartPosition[] spawnPoints;
+    public Vector3[] spawnPoints;
 
     //public GameObject[] dropOnDeath;
     public GenericLootDropTableGameObject dropOnDeath;
-    public float baseDropChance; //Chance that anything drops to start with.
-
-    Color playerColor;
-    Color invulnColor;
 
     private void Start()
     {
@@ -35,37 +33,38 @@ public class HealthSP : MonoBehaviour
             currentInvulnTime = invulnTime;
 
         looksInvuln = (currentInvulnTime > 0);
-
-        playerColor = GetComponent<Renderer>().material.color;
-        invulnColor = playerColor;
-        invulnColor.a = 0.5f;
-
-        GetComponent<Renderer>().material.color = invulnColor;
+        if (looksInvuln && invulnEffect != null)
+        {
+            invulnEffect.SetActive(true);
+        }
 
         AUDIO = GetComponent<AudioSource>();
-
-        spawnPoints = FindObjectsOfType<NetworkStartPosition>();
 
         alreadyDead = false;
 
     }
 
-    public void TakeDamage(int amount)
+    public void HealUp(int amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth+1, 0, maxHealth);
+    }
+
+    public void TakeDamage(int amount, bool canGenerateDrop = true)
     {
         print("I will now take damage." + currentInvulnTime);
 
         if (currentInvulnTime > 0) return;
 
         currentHealth -= amount;
-        looksInvuln = true;
-        GetComponent<Renderer>().material.color = invulnColor;
-        currentInvulnTime = invulnTime;
+        
 
         if (currentHealth <= 0 && !alreadyDead)
         {
             //Play death sound if it has one.
             if (AUDIO != null || dieSound != null)
             {
+                AUDIO.pitch = 1f;
+                AUDIO.timeSamples = 0;
                 AUDIO.clip = dieSound;
                 AUDIO.Play();
             }
@@ -79,25 +78,41 @@ public class HealthSP : MonoBehaviour
                 PlayerSP playerScript = GetComponent<PlayerSP>();
                 if (playerScript != null)
                 {
-                    playerScript.resetStats();
                     playerScript.currentLives--;
                     if (hudForPlayer != null)
                         hudForPlayer.UpdateLives();
                     print("reduced to " + playerScript.currentLives + " lives.");
+                    playerScript.DIE();
+                    /*
                     if (playerScript.currentLives > 0)
                         Respawn();
                     else
                     {
                         gameObject.SetActive(false);
                     }
+                    */
                 }
 
 
             }
-            else
+            else if (canGenerateDrop)
             {
                 ItemSpawnDestroy();
             }
+
+
+            if (isAnEnemy)
+            {
+                hudForPlayer.AddOrRemoveEnemy(-1);
+            }
+        }
+
+        else
+        {
+            looksInvuln = true;
+            if (invulnEffect != null)
+                invulnEffect.SetActive(true);
+            currentInvulnTime = invulnTime;
         }
 
 
@@ -108,15 +123,21 @@ public class HealthSP : MonoBehaviour
     //Regardless, it will destroy the given object.
     void ItemSpawnDestroy()
     {
-        //print("rpcitemspawn "+dropOnDeath.Length);
-        //if (dropOnDeath.)
+        /*
+        print("rpcitemspawn "+dropOnDeath.lootDropItems.Count);
+        for (int i = 0; i < dropOnDeath.lootDropItems.Count; i++) 
         {
-            //print("dropondeathlength is over 0: "+baseDropChance);
-            //Determine if we want to spawn a powerup to begin with:
-            if (Random.Range(0.0f, 1.0f) < baseDropChance)
+            if (dropOnDeath.lootDropItems[i].item != null)
+            print(dropOnDeath.lootDropItems[i].item.name);
+        }
+        */
+
+        if (dropOnDeath.lootDropItems.Count > 0)
+        {
+            //GameObject powerUp = Instantiate(dropOnDeath[Random.Range(0, dropOnDeath.Length)], transform.position, Quaternion.identity);
+            GenericLootDropItemGameObject powerUp = dropOnDeath.PickLootDropItem();
+            if (powerUp.item != null)
             {
-                //GameObject powerUp = Instantiate(dropOnDeath[Random.Range(0, dropOnDeath.Length)], transform.position, Quaternion.identity);
-                GenericLootDropItemGameObject powerUp = dropOnDeath.PickLootDropItem();
                 GameObject newPowerUp = Instantiate(powerUp.item, transform.position, Quaternion.identity);
             }
         }
@@ -133,7 +154,6 @@ public class HealthSP : MonoBehaviour
 
     void OnValidate()
     {
-
         // Validate table and notify the programmer / designer if something went wrong.
         dropOnDeath.ValidateTable();
     }
@@ -149,15 +169,21 @@ public class HealthSP : MonoBehaviour
             if (currentInvulnTime <= 0)
             {
                 print("I am no longer invuln.");
-                GetComponent<Renderer>().material.color = playerColor;
+                if (invulnEffect != null)
+                    invulnEffect.SetActive(false);
                 looksInvuln = false;
             }
         }
     }
 
-    void Respawn()
+    public void Respawn()
     {
         print("RESPAWN");
+
+        looksInvuln = true;
+        if (invulnEffect != null)
+            invulnEffect.SetActive(true);
+        currentInvulnTime = invulnTime;
 
         // default our spawn point to the 0 spot.
         Vector3 spawnPoint = new Vector3(0, 0.5f, 0);
@@ -165,7 +191,7 @@ public class HealthSP : MonoBehaviour
         // If there is a spawn point array and the array is not empty, pick a spawn point at random
         if (spawnPoints != null && spawnPoints.Length > 0)
         {
-            spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
+            spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
         }
 
         // Set the player’s position to the chosen spawn point

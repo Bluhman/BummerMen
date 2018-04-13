@@ -7,10 +7,12 @@ public class ExplosionSP : MonoBehaviour
 {
 
     ParticleSystem PS;
+    Collider COL;
 
     private void Awake()
     {
         PS = GetComponent<ParticleSystem>();
+        COL = GetComponent<Collider>();
     }
 
     private void OnEnable()
@@ -18,7 +20,10 @@ public class ExplosionSP : MonoBehaviour
         PS.Clear();
         PS.Play();
 
+        COL.enabled = true;
+
         //Destroy(gameObject, 0.5f);
+        Invoke("StopDamage", 0.2f);
         Invoke("ReturnToPool", 0.5f);
     }
 
@@ -28,6 +33,11 @@ public class ExplosionSP : MonoBehaviour
         HealthSP thingHit = other.GetComponent<HealthSP>();
         if (thingHit != null)
             thingHit.TakeDamage(1);
+    }
+
+    void StopDamage()
+    {
+        COL.enabled = false;
     }
 
     void ReturnToPool()

@@ -22,7 +22,7 @@ public class EnemyStraightAI : EnemyBaseEntity {
         RaycastHit hit;
         if (Physics.Raycast(transform.position, lastMoveAngle, out hit, gridSize))
         {
-            if (!hit.collider.CompareTag("Player"))
+            if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Explosion"))
             {
                 List<Vector3> locations = new List<Vector3>();
                 for (int a = 0; a < 360; a += 90)
@@ -30,7 +30,7 @@ public class EnemyStraightAI : EnemyBaseEntity {
                     Vector3 positionFacing = new Vector3(Mathf.Cos(Mathf.Deg2Rad * a), 0, Mathf.Sin(Mathf.Deg2Rad * a));
                     if (Physics.Raycast(transform.position, positionFacing, out hit, gridSize))
                     {
-                        if (!hit.collider.CompareTag("Player"))
+                        if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Explosion"))
                         {
                             //print(hit.transform.name + " at " + positionFacing);
                             continue;
