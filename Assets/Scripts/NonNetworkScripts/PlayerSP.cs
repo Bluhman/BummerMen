@@ -65,6 +65,7 @@ public class PlayerSP : MonoBehaviour {
 
     HealthSP HSP;
     Animator animator;
+    public bool usePreviousStats = false;
 
     void Awake()
     {
@@ -115,11 +116,13 @@ public class PlayerSP : MonoBehaviour {
             GetComponentInChildren<Renderer>().material.color = playerColor;
 
         resetStats();
+        if (usePreviousStats)
+            receiveStats();
         currentLives = lives;
 
         //special check: depending on the gamecontroller's player number, we might not want to spawn players.
-        //The one exception is player 1 themselves.
-        if ((playerNumber > 1 || GameController.instance.versus) && !GameController.instance.players[playerNumber-1] && !PlayerSP.testingVERSUS)
+        //The one exception is player 1 themselves if we're playing a singleplayer game.
+        if ((playerNumber > 1 || GameController.instance.versus) && !GameController.instance.players[playerNumber-1] && !testingVERSUS)
         {
             gameObject.SetActive(false);
         }
@@ -156,7 +159,7 @@ public class PlayerSP : MonoBehaviour {
 
         if (playerController == null) return;
 
-        if (Time.timeScale > 0)
+        if (Time.timeScale > 0 && !HSP.hudForPlayer.gameOver)
         moveWithInput();
 
         if (playerController.Action1.WasPressed)
@@ -369,4 +372,33 @@ public class PlayerSP : MonoBehaviour {
         dead = false;
     }
 
+    //These two functions get and set stats from the GameController. They are used in campaign mode to transfer stats from level to level.
+    public void receiveStats()
+    {
+        GameController.PlayerStats myStats = GameController.instance.campaignPlayer;
+
+        currentLives = myStats.lives;
+        HSP.currentHealth = myStats.health;
+        speed = myStats.speed;
+        bombs = myStats.bombs;
+        power = myStats.power;
+        powerBomb = myStats.nuke;
+        remoteBomb = myStats.remote;
+    }
+
+    //The only situation in which to do this is at the end of a level.
+    public void sendStats()
+    {
+        GameController.PlayerStats myStats = new GameController.PlayerStats();
+
+        myStats.lives = currentLives;
+        myStats.health = HSP.currentHealth;
+        myStats.speed = speed;
+        myStats.bombs = bombs;
+        myStats.power = power;
+        myStats.nuke = powerBomb;
+        myStats.remote = remoteBomb;
+
+        GameController.instance.campaignPlayer = myStats;
+    }
 }

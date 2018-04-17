@@ -10,7 +10,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     public GameObject GameOverText;
     public GameObject WinText;
     public GameObject lifeCounterTemplate;
-    Text[] lifeCounters;
+    LifeIndicatorTracker[] lifeCounters;
     public float counterSpacing;
     public Text TimerText;
     public GameObject pauseMenu;
@@ -21,7 +21,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     float timer;
     [HideInInspector]
     public bool paused = false;
-    bool gameOver;
+    [HideInInspector]
+    public bool gameOver;
     public bool versus = false;
     int currentWinner;
     public int enemiesAlive;
@@ -60,15 +61,15 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         timer = timeLimit;
         currentMessage = new Message("", null, 0);
 
-        lifeCounters = new Text[playersSP.Length];
+        lifeCounters = new LifeIndicatorTracker[playersSP.Length];
 
         for (int i = 0; i < playersSP.Length; i++)
         {
             if (!playersSP[i].isActiveAndEnabled) continue;
 
             GameObject lifeCounter = Instantiate(lifeCounterTemplate, transform);
-            lifeCounters[i] = lifeCounter.GetComponentInChildren<Text>();
-            lifeCounter.GetComponentInChildren<Image>().color = playersSP[i].playerColor;
+            lifeCounters[i] = lifeCounter.GetComponentInChildren<LifeIndicatorTracker>();
+            lifeCounters[i].playerSymbol.color = playersSP[i].playerColor;
             if (versus)
             {
                 //Lists life counters vertically.
@@ -159,7 +160,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
             gameOver = true;
             GameController.instance.PlayMusic(winMusic, false);
             WinText.SetActive(true);
-            Time.timeScale = 0;
+            playersSP[0].sendStats();
+            //Time.timeScale = 0;
         }
     }
 
@@ -174,7 +176,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         {
             if (!playersSP[i].isActiveAndEnabled) continue;
 
-            lifeCounters[i].text = " x " + playersSP[i].currentLives;
+            lifeCounters[i].updateStats(playersSP[i].GetComponent<HealthSP>().currentHealth, playersSP[i].currentLives);
             if (playersSP[i].currentLives > 0)
             {
                 if (!allDead)
@@ -198,8 +200,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
                 {
                     theText.text = "DRAW";
                 }
-                Time.timeScale = 0;
-                paused = true;
+                //Time.timeScale = 0;
+                //paused = true;
             }
 
             GameOverText.SetActive(true);
@@ -218,8 +220,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
             GameOverText.SetActive(true);
             gameOver = true;
             GameController.instance.PlayMusic(winMusic, false);
-            Time.timeScale = 0;
-            paused = true;
+            //Time.timeScale = 0;
+            //paused = true;
             //print("I think there is one winner.");
         }
     }
@@ -227,7 +229,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     public void TogglePause()
     {
         //Don't let us call up the pause menu if we game-overed.
-        if (GameOverText.activeSelf) return;
+        if (GameOverText.activeSelf || WinText.activeSelf) return;
 
         if (!paused)
         {

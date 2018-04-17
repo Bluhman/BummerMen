@@ -21,6 +21,20 @@ public class GameController : MonoBehaviour {
     [HideInInspector]
     public bool versus;
 
+    //Set of data to track stats in single-player game.
+    public struct PlayerStats
+    {
+        public float speed;
+        public int bombs;
+        public int power;
+        public int health;
+        public int lives;
+        public bool remote;
+        public bool nuke;
+    }
+    [HideInInspector]
+    public PlayerStats campaignPlayer;
+
     void Awake()
     {
         //if there is no gamecontroller, we set it to this version that is running.

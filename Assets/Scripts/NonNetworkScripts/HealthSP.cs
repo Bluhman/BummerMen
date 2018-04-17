@@ -47,18 +47,30 @@ public class HealthSP : MonoBehaviour
     public void HealUp(int amount)
     {
         currentHealth = Mathf.Clamp(currentHealth+1, 0, maxHealth);
+        if (hudForPlayer != null)
+            hudForPlayer.UpdateLives();
     }
 
     public void TakeDamage(int amount, bool canGenerateDrop = true)
     {
-        print("I will now take damage." + currentInvulnTime);
+        if (alreadyDead) return;
 
         if (currentInvulnTime > 0) return;
+        print("I will now take damage." + amount);
+        if (hudForPlayer!= null)
+        {
+            //Players will not take any damage if the level has completed.
+            if (hudForPlayer.gameOver) return;
+        }
 
         currentHealth -= amount;
+        print("Current HP: " + currentHealth);
+        if (hudForPlayer != null)
+            hudForPlayer.UpdateLives();
         
 
-        if (currentHealth <= 0 && !alreadyDead)
+
+        if (currentHealth <= 0)
         {
             //Play death sound if it has one.
             if (AUDIO != null || dieSound != null)
@@ -73,7 +85,6 @@ public class HealthSP : MonoBehaviour
             //This is important for objects that spawn things when destroyed, such as powerups.
             if (isAPlayer)
             {
-                currentHealth = 1;
                 //Reset all the player's stats.
                 PlayerSP playerScript = GetComponent<PlayerSP>();
                 if (playerScript != null)
@@ -193,7 +204,7 @@ public class HealthSP : MonoBehaviour
         {
             spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
         }
-
+        HealUp(1);
         // Set the player’s position to the chosen spawn point
         transform.position = spawnPoint;
         alreadyDead = false;
