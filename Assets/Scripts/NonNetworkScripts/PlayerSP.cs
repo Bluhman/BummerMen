@@ -393,6 +393,7 @@ public class PlayerSP : MonoBehaviour {
 
         myStats.lives = currentLives;
         myStats.health = HSP.currentHealth;
+        if (myStats.health <= 0) myStats.health = 1;
         myStats.speed = speed;
         myStats.bombs = bombs;
         myStats.power = power;
