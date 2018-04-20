@@ -376,6 +376,7 @@ public class PlayerSP : MonoBehaviour {
     public void receiveStats()
     {
         GameController.PlayerStats myStats = GameController.instance.campaignPlayer;
+        if (myStats.health <= 0) return;
 
         currentLives = myStats.lives;
         HSP.currentHealth = myStats.health;

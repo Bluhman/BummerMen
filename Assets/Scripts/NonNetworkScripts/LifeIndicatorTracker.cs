@@ -10,7 +10,7 @@ public class LifeIndicatorTracker : MonoBehaviour {
 
     public Image playerSymbol;
     public Text livesLeft;
-    string lifeTemplate = " x ";
+    string lifeTemplate = "Lives: ";
     public Slider healthSlider;
 
     public void updateStats(int newHealth, int newLives)

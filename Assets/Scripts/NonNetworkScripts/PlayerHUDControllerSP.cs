@@ -47,6 +47,9 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     Queue<Message> messageQueue;
     Message currentMessage;
 
+    public enum winCondition { KillAll, ReachExit }
+    public winCondition howToWin;
+
 
 	// Use this for initialization
 	void Start () {
@@ -154,15 +157,20 @@ public class PlayerHUDControllerSP : MonoBehaviour {
     {
         enemiesAlive += value;
 
-        if (enemiesAlive <= 0)
+        if (enemiesAlive <= 0 && howToWin == winCondition.KillAll)
         {
-            //WE WIN.
-            gameOver = true;
-            GameController.instance.PlayMusic(winMusic, false);
-            WinText.SetActive(true);
-            playersSP[0].sendStats();
-            //Time.timeScale = 0;
+            Win();
         }
+    }
+
+    public void Win()
+    {
+        //WE WIN.
+        gameOver = true;
+        GameController.instance.PlayMusic(winMusic, false);
+        WinText.SetActive(true);
+        playersSP[0].sendStats();
+        //Time.timeScale = 0;
     }
 
     public void UpdateLives()
