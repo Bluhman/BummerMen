@@ -25,7 +25,7 @@ public class EnemyBombEater : EnemyBaseEntity
         RaycastHit hit;
         if (Physics.Raycast(transform.position, lastMoveAngle, out hit, gridSize))
         {
-            if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Bomb") || !hit.collider.CompareTag("Explosion"))
+            if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Bomb") || !hit.collider.CompareTag("Explosion") || !hit.collider.CompareTag("Powerup"))
             {
                 List<Vector3> locations = new List<Vector3>();
                 for (int a = 0; a < 360; a += 90)
@@ -33,7 +33,7 @@ public class EnemyBombEater : EnemyBaseEntity
                     Vector3 positionFacing = new Vector3(Mathf.Cos(Mathf.Deg2Rad * a), 0, Mathf.Sin(Mathf.Deg2Rad * a));
                     if (Physics.Raycast(transform.position, positionFacing, out hit, gridSize))
                     {
-                        if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Bomb") || !hit.collider.CompareTag("Explosion"))
+                        if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Bomb") || !hit.collider.CompareTag("Explosion") || !hit.collider.CompareTag("Powerup"))
                         {
                             //print(hit.transform.name + " at " + positionFacing);
                             continue;

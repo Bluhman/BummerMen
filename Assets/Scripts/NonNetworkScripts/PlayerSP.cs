@@ -45,6 +45,7 @@ public class PlayerSP : MonoBehaviour {
 
     public bool powerBomb;
     public bool remoteBomb;
+    public bool ghost;
 
     public int maxBombs = 6;
     public int maxPower = 12;
@@ -164,12 +165,17 @@ public class PlayerSP : MonoBehaviour {
 
         if (playerController.Action1.WasPressed)
         {
-            LayBomb();
+            LayBomb(false);
+        }
+
+        if (playerController.Action2.WasPressed)
+        {
+            LayBomb(true);
         }
     }
 
     //Lays a bomb aligned to the game's grid:
-    void LayBomb()
+    void LayBomb(bool special)
     {
         if (currentBombs >= bombs) return;
 
@@ -187,18 +193,28 @@ public class PlayerSP : MonoBehaviour {
         currentBombs++;
         print("Bomb laid");
 
-        CreateBomb(bomb);
+        CreateBomb(bomb, special);
     }
     
-    void CreateBomb(GameObject bomb)
+    void CreateBomb(GameObject bomb, bool special)
     {
         BombSP bombScript = bomb.GetComponent<BombSP>();
         bombScript.owner = this;
         bombScript.playerController = playerController;
         bombScript.power = power;
-        bombScript.powerBomb = powerBomb;
-        bombScript.triggerBomb = remoteBomb;
+        if (special)
+        {
+            bombScript.powerBomb = powerBomb;
+            bombScript.triggerBomb = remoteBomb;
+        }
         bombScript.SwapModel();
+
+        if (ghost)
+        {
+            Collider bombCollider = bomb.GetComponent<Collider>();
+            bombCollider.isTrigger = false;
+            Physics.IgnoreCollision(bombCollider, character);
+        }
     }
 
     //Takes input to move the player.
@@ -336,6 +352,10 @@ public class PlayerSP : MonoBehaviour {
                 //Don't worry my friends! I am your shield!
                 HSP.HealUp(1);
                 break;
+            case 8:
+                //ghost allows you to go through all bombs.
+                ghost = true;
+                break;
             default:
                 //Do nothing because it's not a valid powerup.
                 return;
@@ -385,6 +405,7 @@ public class PlayerSP : MonoBehaviour {
         power = myStats.power;
         powerBomb = myStats.nuke;
         remoteBomb = myStats.remote;
+        ghost = myStats.ghost;
     }
 
     //The only situation in which to do this is at the end of a level.
@@ -400,6 +421,7 @@ public class PlayerSP : MonoBehaviour {
         myStats.power = power;
         myStats.nuke = powerBomb;
         myStats.remote = remoteBomb;
+        myStats.ghost = ghost;
 
         GameController.instance.campaignPlayer = myStats;
     }

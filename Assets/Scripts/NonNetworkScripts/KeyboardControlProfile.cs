@@ -32,6 +32,12 @@ public class KeyboardControlProfile : UnityInputDeviceProfile
             },
             new InputControlMapping
             {
+                Handle = "Special Bomb",
+                Target = InputControlType.Action2,
+                Source = KeyCodeButton(KeyCode.LeftControl)
+            },
+            new InputControlMapping
+            {
                 Handle = "Detonate",
                 Target = InputControlType.Action3,
                 Source = KeyCodeButton(KeyCode.LeftShift, KeyCode.RightShift)

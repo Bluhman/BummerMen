@@ -31,6 +31,7 @@ public class GameController : MonoBehaviour {
         public int lives;
         public bool remote;
         public bool nuke;
+        public bool ghost;
     }
     [HideInInspector]
     public PlayerStats campaignPlayer;
