@@ -34,7 +34,7 @@ public class KeyboardControlProfile : UnityInputDeviceProfile
             {
                 Handle = "Special Bomb",
                 Target = InputControlType.Action2,
-                Source = KeyCodeButton(KeyCode.LeftControl)
+                Source = KeyCodeButton(KeyCode.LeftControl, KeyCode.RightControl)
             },
             new InputControlMapping
             {

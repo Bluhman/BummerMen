@@ -390,6 +390,7 @@ public class PlayerSP : MonoBehaviour {
         power = basePower;
         powerBomb = remoteBomb = false;
         dead = false;
+        ghost = false;
     }
 
     //These two functions get and set stats from the GameController. They are used in campaign mode to transfer stats from level to level.
