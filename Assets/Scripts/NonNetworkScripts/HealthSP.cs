@@ -110,6 +110,14 @@ public class HealthSP : MonoBehaviour
             {
                 ItemSpawnDestroy();
             }
+            else
+            {
+                EnemyBaseEntity enemyScript = GetComponent<EnemyBaseEntity>();
+                if (enemyScript != null)
+                {
+                    enemyScript.DeathAnimation();
+                }
+            }
 
 
             if (isAnEnemy)
