@@ -46,7 +46,7 @@ public class KeyboardControlProfile : UnityInputDeviceProfile
             {
                 Handle = "Pause",
                 Target = InputControlType.Menu,
-                Source = KeyCodeButton(KeyCode.Escape)
+                Source = KeyCodeButton(KeyCode.Escape, KeyCode.Return)
             }
         };
 
