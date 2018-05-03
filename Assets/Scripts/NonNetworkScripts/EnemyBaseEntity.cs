@@ -85,7 +85,7 @@ public class EnemyBaseEntity : MonoBehaviour {
             Vector3 positionFacing = new Vector3(Mathf.Cos(Mathf.Deg2Rad * a), 0, Mathf.Sin(Mathf.Deg2Rad * a));
             if (Physics.Raycast(transform.position, positionFacing, out hit, gridSize))
             {
-                if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Explosion") || !hit.collider.CompareTag("Powerup"))
+                if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Explosion"))
                 {
                     //print(hit.transform.name + " at " + positionFacing);
                     continue;

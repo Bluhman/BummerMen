@@ -13,30 +13,13 @@ public class MessageArea : MonoBehaviour {
     public Sprite Face;
     public float Duration;
     public bool overWrite;
-    public float delay = 0;
-
-    private bool consumed;
-
-    void Start()
-    {
-        consumed = false;
-    }
 
 	void OnTriggerStay(Collider other)
     {
-        if (consumed) return;
-
         if (other.CompareTag("Player"))
         {
-            consumed = true;
-            StartCoroutine(getMessage());
+            PHUD.ShowMessage(new PlayerHUDControllerSP.Message(Message, Face, Duration, overWrite));
+            Destroy(gameObject);
         }
-    }
-
-    IEnumerator getMessage()
-    {
-        yield return new WaitForSeconds(delay);
-        PHUD.ShowMessage(new PlayerHUDControllerSP.Message(Message, Face, Duration, overWrite));
-        Destroy(gameObject);
     }
 }

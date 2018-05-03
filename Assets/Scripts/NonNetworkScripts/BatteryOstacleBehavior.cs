@@ -48,7 +48,7 @@ public class BatteryOstacleBehavior : MonoBehaviour {
         nextConduit.SetCharge(true);
         
         GameObject lightningBolt = Instantiate(lightningBoltEffect, halfwayPoint, Quaternion.LookRotation(boltDirection));
-        lightningBolt.transform.localScale = new Vector3(lightningBolt.transform.localScale.x, lightningBolt.transform.localScale.y, boltDistance);
+        lightningBolt.transform.localScale = new Vector3(0.1f, 0.1f, boltDistance);
 
         AS.Play();
 

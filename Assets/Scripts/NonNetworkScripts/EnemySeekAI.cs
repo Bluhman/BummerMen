@@ -54,7 +54,7 @@ public class EnemySeekAI : EnemyBaseEntity
 
             if (Physics.Raycast(transform.position, positionFacing, out hit, customGridSize))
             {
-                if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Explosion") || !hit.collider.CompareTag("Powerup"))
+                if (!hit.collider.CompareTag("Player") || !hit.collider.CompareTag("Explosion"))
                 {
                     //print(hit.transform.name + " at " + positionFacing);
                     continue;

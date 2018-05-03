@@ -45,7 +45,6 @@ public class PlayerSP : MonoBehaviour {
 
     public bool powerBomb;
     public bool remoteBomb;
-    public bool ghost;
 
     public int maxBombs = 6;
     public int maxPower = 12;
@@ -66,7 +65,6 @@ public class PlayerSP : MonoBehaviour {
 
     HealthSP HSP;
     Animator animator;
-    public bool usePreviousStats = false;
 
     void Awake()
     {
@@ -117,13 +115,11 @@ public class PlayerSP : MonoBehaviour {
             GetComponentInChildren<Renderer>().material.color = playerColor;
 
         resetStats();
-        if (usePreviousStats)
-            receiveStats();
         currentLives = lives;
 
         //special check: depending on the gamecontroller's player number, we might not want to spawn players.
-        //The one exception is player 1 themselves if we're playing a singleplayer game.
-        if ((playerNumber > 1 || GameController.instance.versus) && !GameController.instance.players[playerNumber-1] && !testingVERSUS)
+        //The one exception is player 1 themselves.
+        if ((playerNumber > 1 || GameController.instance.versus) && !GameController.instance.players[playerNumber-1] && !PlayerSP.testingVERSUS)
         {
             gameObject.SetActive(false);
         }
@@ -160,22 +156,17 @@ public class PlayerSP : MonoBehaviour {
 
         if (playerController == null) return;
 
-        if (Time.timeScale > 0 && !HSP.hudForPlayer.gameOver)
+        if (Time.timeScale > 0)
         moveWithInput();
 
         if (playerController.Action1.WasPressed)
         {
-            LayBomb(false);
-        }
-
-        if (playerController.Action2.WasPressed)
-        {
-            LayBomb(true);
+            LayBomb();
         }
     }
 
     //Lays a bomb aligned to the game's grid:
-    void LayBomb(bool special)
+    void LayBomb()
     {
         if (currentBombs >= bombs) return;
 
@@ -193,28 +184,18 @@ public class PlayerSP : MonoBehaviour {
         currentBombs++;
         print("Bomb laid");
 
-        CreateBomb(bomb, special);
+        CreateBomb(bomb);
     }
     
-    void CreateBomb(GameObject bomb, bool special)
+    void CreateBomb(GameObject bomb)
     {
         BombSP bombScript = bomb.GetComponent<BombSP>();
         bombScript.owner = this;
         bombScript.playerController = playerController;
         bombScript.power = power;
-        if (special)
-        {
-            bombScript.powerBomb = powerBomb;
-            bombScript.triggerBomb = remoteBomb;
-        }
+        bombScript.powerBomb = powerBomb;
+        bombScript.triggerBomb = remoteBomb;
         bombScript.SwapModel();
-
-        if (ghost)
-        {
-            Collider bombCollider = bomb.GetComponent<Collider>();
-            bombCollider.isTrigger = false;
-            Physics.IgnoreCollision(bombCollider, character);
-        }
     }
 
     //Takes input to move the player.
@@ -352,10 +333,6 @@ public class PlayerSP : MonoBehaviour {
                 //Don't worry my friends! I am your shield!
                 HSP.HealUp(1);
                 break;
-            case 8:
-                //ghost allows you to go through all bombs.
-                ghost = true;
-                break;
             default:
                 //Do nothing because it's not a valid powerup.
                 return;
@@ -390,40 +367,6 @@ public class PlayerSP : MonoBehaviour {
         power = basePower;
         powerBomb = remoteBomb = false;
         dead = false;
-        ghost = false;
     }
 
-    //These two functions get and set stats from the GameController. They are used in campaign mode to transfer stats from level to level.
-    public void receiveStats()
-    {
-        GameController.PlayerStats myStats = GameController.instance.campaignPlayer;
-        if (myStats.health <= 0) return;
-
-        currentLives = myStats.lives;
-        HSP.currentHealth = myStats.health;
-        speed = myStats.speed;
-        bombs = myStats.bombs;
-        power = myStats.power;
-        powerBomb = myStats.nuke;
-        remoteBomb = myStats.remote;
-        ghost = myStats.ghost;
-    }
-
-    //The only situation in which to do this is at the end of a level.
-    public void sendStats()
-    {
-        GameController.PlayerStats myStats = new GameController.PlayerStats();
-
-        myStats.lives = currentLives;
-        myStats.health = HSP.currentHealth;
-        if (myStats.health <= 0) myStats.health = 1;
-        myStats.speed = speed;
-        myStats.bombs = bombs;
-        myStats.power = power;
-        myStats.nuke = powerBomb;
-        myStats.remote = remoteBomb;
-        myStats.ghost = ghost;
-
-        GameController.instance.campaignPlayer = myStats;
-    }
 }

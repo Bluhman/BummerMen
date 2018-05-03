@@ -12,9 +12,6 @@ public class PowerupSP : MonoBehaviour
     float respawnTimer;
     public int powerupType;
     public float rotateSpeed;
-    public bool despawns = false;
-    public float despawnTime = 15.0f;
-    float despawnTimer;
     
     Collider col;
     Renderer ren;
@@ -46,14 +43,6 @@ public class PowerupSP : MonoBehaviour
             }
         }
 
-        if (despawns && despawnTimer < despawnTime)
-        {
-            despawnTimer += Time.deltaTime;
-            if (despawnTimer >= despawnTime)
-            {
-                Destroy(gameObject);
-            }
-        }
         
 
         //YOU SPIN ME RIGHT ROUND BABY RIGHT ROUND!

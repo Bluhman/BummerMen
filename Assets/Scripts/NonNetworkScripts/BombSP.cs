@@ -17,9 +17,6 @@ public class BombSP : MonoBehaviour
     public GameObject remoteModel;
     public GameObject megaBombModel;
 
-    private AudioSource AS;
-    public float soundSpeedUpRate = 0.2f;
-
     [HideInInspector]
     public InputDevice playerController;
     [HideInInspector]
@@ -56,10 +53,8 @@ public class BombSP : MonoBehaviour
             //theMaterial.color = new Color(1, 0.4f, 0.4f, 1);
 
             model = Instantiate(megaBombModel, transform);
-            AS = model.GetComponent<AudioSource>();
 
-            bombLocalScale = 1f;
-            bombPulseMagnitude /= 3;
+            bombPulseMagnitude *= 2; //power bombs pulse a LOT.
         }
         else if (triggerBomb)
         {
@@ -90,12 +85,6 @@ public class BombSP : MonoBehaviour
         bombPulsePeriod += Time.deltaTime;
         float currentSize = bombLocalScale + bombPulseMagnitude * Mathf.Sin(bombPulseSpeed * bombPulsePeriod);
         model.transform.localScale = new Vector3(currentSize, currentSize, currentSize);
-
-        if (AS != null)
-        {
-            //Modify the noise made by a power bomb
-            AS.pitch += Time.deltaTime * soundSpeedUpRate;
-        }
 
         if (triggerBomb)
         {
