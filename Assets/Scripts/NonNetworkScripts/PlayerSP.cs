@@ -123,7 +123,7 @@ public class PlayerSP : MonoBehaviour {
 
         //special check: depending on the gamecontroller's player number, we might not want to spawn players.
         //The one exception is player 1 themselves if we're playing a singleplayer game.
-        if ((playerNumber > 1 || GameController.instance.versus) && !GameController.instance.players[playerNumber-1] && !testingVERSUS)
+        if (GameController.instance.versus && !GameController.instance.players[playerNumber-1] && !testingVERSUS)
         {
             gameObject.SetActive(false);
         }
@@ -160,9 +160,6 @@ public class PlayerSP : MonoBehaviour {
 
         if (playerController == null) return;
 
-        if (Time.timeScale > 0 && !HSP.hudForPlayer.gameOver)
-        moveWithInput();
-
         if (playerController.Action1.WasPressed)
         {
             LayBomb(false);
@@ -172,6 +169,14 @@ public class PlayerSP : MonoBehaviour {
         {
             LayBomb(true);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if (playerController == null) return;
+
+        if (Time.timeScale > 0 && !HSP.hudForPlayer.gameOver)
+            moveWithInput();
     }
 
     //Lays a bomb aligned to the game's grid:

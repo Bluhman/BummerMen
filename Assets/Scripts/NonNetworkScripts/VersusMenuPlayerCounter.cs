@@ -21,7 +21,13 @@ public class VersusMenuPlayerCounter : MonoBehaviour {
     public void ChangePlayercount(int count)
     {
         playersIn += count;
+    }
 
-        playButton.interactable = (playersIn >= 2);
+    public void Play(int sceneIndex)
+    {
+        if (playersIn >= 2)
+        {
+            GameController.instance.LoadNewScene(sceneIndex);
+        }
     }
 }

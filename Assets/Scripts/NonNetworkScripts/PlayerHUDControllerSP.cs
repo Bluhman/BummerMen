@@ -64,6 +64,8 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         timer = timeLimit;
         currentMessage = new Message("", null, 0);
 
+        GameController.instance.versus = this.versus;
+
         lifeCounters = new LifeIndicatorTracker[playersSP.Length];
 
         for (int i = 0; i < playersSP.Length; i++)
@@ -89,7 +91,7 @@ public class PlayerHUDControllerSP : MonoBehaviour {
         }
         UpdateLives();
 
-        GameController.instance.versus = this.versus;
+        
 
         //Testing message display functions.
         //ShowMessage(new Message("This is a test message", null, 3));
