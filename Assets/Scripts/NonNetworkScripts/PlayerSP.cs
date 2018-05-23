@@ -123,8 +123,10 @@ public class PlayerSP : MonoBehaviour {
 
         //special check: depending on the gamecontroller's player number, we might not want to spawn players.
         //The one exception is player 1 themselves if we're playing a singleplayer game.
+        print(GameController.instance.versus);
         if (GameController.instance.versus && !GameController.instance.players[playerNumber-1] && !testingVERSUS)
         {
+            
             gameObject.SetActive(false);
         }
         else if (InputManager.Devices.Count >= playerNumber)
@@ -174,6 +176,7 @@ public class PlayerSP : MonoBehaviour {
     private void FixedUpdate()
     {
         if (playerController == null) return;
+        if (dead) return;
 
         if (Time.timeScale > 0 && !HSP.hudForPlayer.gameOver)
             moveWithInput();

@@ -16,6 +16,7 @@ public class VersusMenuPlayerCounter : MonoBehaviour {
 	void Start () {
         playersIn = 0;
         GameController.instance.ResetPlayercount();
+        GameController.instance.versus = true;
 	}
     
     public void ChangePlayercount(int count)

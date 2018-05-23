@@ -79,6 +79,13 @@ public class GameController : MonoBehaviour {
         SceneManager.LoadScene(sceneIndex);
     }
 
+    public void LoadNewSceneVersusFalse (int sceneIndex)
+    {
+        Time.timeScale = 1; //Used in case quitting the game while paused.
+        SceneManager.LoadScene(sceneIndex);
+        instance.versus = false;
+    }
+
     public void QuitGame()
     {
         Application.Quit();
